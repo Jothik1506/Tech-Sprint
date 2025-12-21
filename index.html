@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zen Browser</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<!-- HOME -->
+<div id="home" class="home">
+    <div class="center">
+        <div class="searchRow">
+            <span class="g">G</span>
+            <input id="searchInput" type="text" placeholder="Search the web" />
+        </div>
+
+        <div class="dots">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="appsHeader">
+            <div class="appsTitle">Fav Updates</div>
+            <button id="addAppBtn" class="addAppBtn">＋ Add</button>
+        </div>
+
+        <div id="appsGrid" class="appsGrid"></div>
+    </div>
+</div>
+
+<!-- WEB -->
+<div id="webWrap" class="webWrap hidden">
+
+    <!-- TOP BAR -->
+    <div class="topBar">
+        <button id="backBtn">◀</button>
+        <button id="forwardBtn">▶</button>
+        <button id="reloadBtn">⟳</button>
+        <input id="urlBar" type="text" />
+        <button id="homeBtn">⌂</button>
+    </div>
+
+    <!-- CONTENT -->
+    <webview
+            id="webview"
+            class="webview"
+            partition="persist:zen"
+            allowpopups>
+    </webview>
+
+    <!-- 🔽 BOTTOM TAB BAR -->
+    <div id="tabBar" class="tabBar">
+        <button id="newTabBtn" class="newTabBtn">＋</button>
+        <div id="tabs"></div>
+    </div>
+
+</div>
+
+<script src="renderer.js"></script>
+</body>
+</html>
