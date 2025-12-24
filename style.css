@@ -1,12 +1,14 @@
 /* WELLNESS BROWSER THEME */
 :root {
-  --bg-color: #241b2f; /* Dark Purple */
+  --bg-color: #241b2f;
+  /* Dark Purple */
   --card-bg: rgba(255, 255, 255, 0.1);
   --text-color: #ffffff;
   --accent-color: #a06cd5;
 }
 
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -14,67 +16,72 @@ body, html {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 /* DASHBOARD LAYOUT */
 .dashboard {
   display: grid;
-  grid-template-columns: 350px 1fr 300px;
+  grid-template-columns: 250px 1fr 350px;
   grid-template-rows: 100%;
   height: 100vh;
   padding: 20px;
+  padding-bottom: 120px;
   box-sizing: border-box;
   gap: 20px;
+  position: relative;
+}
+
+/* Desktop Label */
+.desktopLabel {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 10;
 }
 
 /* CARDS COMMON */
-.card, .widget {
+.card,
+.widget {
   background: var(--card-bg);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   padding: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
 }
 
-/* LEFT PANEL (Exercise) */
+/* LEFT PANEL (Spotify & Face) */
 .leftPanel {
   display: flex;
   flex-direction: column;
   gap: 20px;
   height: 100%;
-}
-.exerciseCard {
-  flex: 1;
   position: relative;
-  overflow: hidden;
-  justify-content: space-between;
 }
-.exerciseCard h3 { margin-top: 0; }
-#selfieVideo {
-  width: 100%;
-  height: 300px;
-  background: black;
-  border-radius: 8px;
-  object-fit: cover;
-  transform: scaleX(-1); /* Mirror effect */
-  margin: 10px 0;
+
+.playButton {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
 }
-.exerciseOverlay {
-  margin-top: 10px;
-  font-size: 14px;
-}
-.detectionBox {
-    margin-top: 10px;
-    padding: 10px;
-    background: rgba(0, 255, 0, 0.1);
-    color: #0f0;
-    border: 1px solid #0f0;
-    text-align: center;
-    border-radius: 4px;
-    display: none; /* Shown by JS */
+
+.playButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
 /* CENTER PANEL (Search & grid) */
@@ -85,19 +92,23 @@ body, html {
   align-items: center;
   gap: 40px;
 }
+
 .searchContainer {
   width: 80%;
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,0.08); /* Slightly lighter */
+  background: rgba(255, 255, 255, 0.08);
+  /* Slightly lighter */
   padding: 10px 20px;
   border-radius: 30px;
 }
+
 .g-logo {
   font-size: 24px;
   font-weight: bold;
   margin-right: 15px;
 }
+
 #searchInput {
   flex: 1;
   background: transparent;
@@ -106,15 +117,27 @@ body, html {
   font-size: 16px;
   outline: none;
 }
-.searchIcons span {
-  margin-left: 10px;
+
+.searchIcons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.searchIcons svg {
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.searchIcons svg:hover {
+  transform: scale(1.1);
 }
 
 .quickApps {
   display: flex;
   gap: 15px;
 }
+
 .appCircle {
   width: 50px;
   height: 50px;
@@ -124,68 +147,187 @@ body, html {
   opacity: 0.8;
   transition: 0.2s;
 }
-.appCircle:hover { opacity: 1; transform: scale(1.1); }
+
+.appCircle:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
 
 .widgetsRow {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   width: 100%;
   justify-content: center;
+  max-width: 900px;
 }
+
 .widget {
-  width: 180px;
+  width: 200px;
   height: 170px;
   font-size: 14px;
   justify-content: space-between;
 }
+
 .widgetHeader {
   font-weight: bold;
   margin-bottom: 5px;
   color: #ddd;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 5px;
 }
 
-/* RIGHT PANEL (Music & Auth) */
+/* RIGHT PANEL (Exercise & Movement) */
 .rightPanel {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  align-items: stretch; 
+  align-items: stretch;
+  position: relative;
 }
+
+.exerciseCard {
+  position: relative;
+  overflow: hidden;
+  justify-content: space-between;
+  max-height: 400px;
+  flex-shrink: 0;
+  text-align: center;
+  align-items: center;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+}
+
+.exerciseCard h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+#exerciseStatus {
+  font-size: 12px;
+  margin-bottom: 3px;
+  text-align: center;
+}
+
+#exerciseCount {
+  font-size: 12px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+#selfieVideo {
+  width: 200px;
+  height: 200px;
+  background: black;
+  border-radius: 50%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  /* Mirror effect */
+  margin: 5px auto;
+  display: block;
+}
+
+.exerciseOverlay {
+  margin-top: -10px;
+  font-size: 10px;
+  text-align: center;
+}
+
+.exerciseOverlay p {
+  margin: 3px 0;
+  text-align: center;
+}
+
+.detectionBox {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(0, 255, 0, 0.1);
+  color: #0f0;
+  border: 1px solid #0f0;
+  text-align: center;
+  border-radius: 4px;
+  display: none;
+  /* Shown by JS */
+}
+
+/* Music Card (now in left panel) */
 .musicCard {
   background: rgba(160, 108, 213, 0.3);
-  height: 120px;
+  height: 100px;
   justify-content: center;
+  padding: 12px;
 }
-.musicHeader { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-.musicControls { display: flex; justify-content: space-around; }
+
+.musicHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.musicControls {
+  display: flex;
+  justify-content: space-around;
+}
+
 .musicControls button {
   background: none;
   border: none;
   color: white;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .faceCard {
-  flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  max-height: 180px;
+  padding: 15px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
 }
+
 .facesilhouette {
-  font-size: 80px;
-  margin-top: 20px;
+  font-size: 50px;
+  margin-top: 10px;
   opacity: 0.5;
   animation: pulse 2s infinite;
 }
 
+.faceHeader {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.faceStatus {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
 @keyframes pulse {
-    0% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.05); opacity: 0.7; }
-    100% { transform: scale(1); opacity: 0.5; }
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
 }
 
 .settingsIcon {
@@ -194,10 +336,160 @@ body, html {
   right: 20px;
   font-size: 24px;
   cursor: pointer;
+  z-index: 10;
+}
+
+/* BOOKMARK BAR - BOTTOM POSITIONED (above search bar) */
+.bookmarkBar {
+  position: fixed;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  background: rgba(30, 30, 40, 0.98);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 100;
+  padding: 8px 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 50px;
+  box-sizing: border-box;
+  gap: 10px;
+}
+
+.bookmarkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bookmarkSearchRow {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(30, 30, 40, 0.98);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  gap: 10px;
+  height: 50px;
+  box-sizing: border-box;
+}
+
+.bookmark {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-size: 12px;
+  height: 32px;
+}
+
+.bookmark:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.bookmarkIcon {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.bookmarkLabel {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 11px;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bookmarkMore {
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+  border-radius: 4px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.bookmarkMore:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bookmarkTopRight {
+  display: none;
+}
+
+.bookmarkUrlInput {
+  display: none;
+}
+
+.navBtn {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.navBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bookmarkSearchInput {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 12px;
+  outline: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  text-align: left;
+}
+
+.bookmarkSearchInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.bookmarkIconBtn {
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+  padding: 4px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookmarkIconBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* WEBVIEW OVERLAY */
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
+
 .webWrap {
   width: 100vw;
   height: 100vh;
@@ -205,17 +497,313 @@ body, html {
   flex-direction: column;
   background: #fff;
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   z-index: 100;
 }
+
 .topBar {
   padding: 8px;
   background: #eee;
   display: flex;
   gap: 10px;
 }
+
 #webview {
   flex: 1;
   width: 100%;
   height: 100%;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - MEDIA QUERIES
+   ======================================== */
+
+/* Tablet - Large (max-width: 1024px) */
+@media screen and (max-width: 1024px) {
+  .dashboard {
+    grid-template-columns: 200px 1fr 280px;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .desktopLabel {
+    font-size: 12px;
+    top: 20px;
+    left: 20px;
+  }
+
+  .searchContainer {
+    width: 90%;
+    padding: 8px 15px;
+  }
+
+  .widget {
+    width: 160px;
+    height: 150px;
+  }
+
+  #selfieVideo {
+    width: 180px;
+    height: 180px;
+  }
+
+  .exerciseCard {
+    max-height: 350px;
+  }
+}
+
+/* Tablet - Medium (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .leftPanel,
+  .rightPanel {
+    flex-direction: row;
+    gap: 15px;
+    height: auto;
+  }
+
+  .leftPanel .card,
+  .rightPanel .card {
+    flex: 1;
+    max-height: 200px;
+  }
+
+  .exerciseCard {
+    max-height: 300px;
+  }
+
+  .faceCard {
+    max-height: 200px;
+  }
+
+  #selfieVideo {
+    width: 150px;
+    height: 150px;
+  }
+
+  .searchContainer {
+    width: 95%;
+  }
+
+  .widgetsRow {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .widget {
+    width: 140px;
+    height: 140px;
+    font-size: 12px;
+  }
+
+  .quickApps {
+    gap: 10px;
+  }
+
+  .appCircle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .playButton {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .settingsIcon {
+    font-size: 20px;
+  }
+}
+
+/* Mobile - Large (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  .dashboard {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .desktopLabel {
+    font-size: 10px;
+    top: 15px;
+    left: 15px;
+  }
+
+  .leftPanel,
+  .rightPanel {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .leftPanel .card,
+  .rightPanel .card {
+    max-height: none;
+  }
+
+  .musicCard {
+    height: 80px;
+    padding: 10px;
+  }
+
+  .musicHeader {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .musicControls button {
+    font-size: 16px;
+  }
+
+  .faceCard {
+    max-height: 150px;
+    padding: 10px;
+  }
+
+  .facesilhouette {
+    font-size: 40px;
+    margin-top: 8px;
+  }
+
+  .exerciseCard {
+    max-height: 280px;
+  }
+
+  .exerciseCard h3 {
+    font-size: 12px;
+  }
+
+  #exerciseStatus,
+  #exerciseCount {
+    font-size: 11px;
+  }
+
+  #selfieVideo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .exerciseOverlay {
+    font-size: 9px;
+  }
+
+  .searchContainer {
+    width: 100%;
+    padding: 6px 12px;
+  }
+
+  .g-logo {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  #searchInput {
+    font-size: 14px;
+  }
+
+  .searchIcons svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .quickApps {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .appCircle {
+    width: 35px;
+    height: 35px;
+  }
+
+  .widgetsRow {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .widget {
+    width: 100%;
+    max-width: 280px;
+    height: 120px;
+    font-size: 11px;
+  }
+
+  .playButton {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+    bottom: 15px;
+    left: 15px;
+  }
+
+  .settingsIcon {
+    font-size: 18px;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  /* Bookmark bar responsive */
+  .bookmarkBar {
+    height: 45px;
+    padding: 0 10px;
+    gap: 3px;
+  }
+
+  .bookmark {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .bookmarkLabel {
+    max-width: 80px;
+    font-size: 11px;
+  }
+
+  .bookmarkSearch {
+    max-width: 250px;
+  }
+
+  .bookmarkSearchInput {
+    width: 120px;
+    font-size: 11px;
+  }
+
+  .bookmarkIconBtn {
+    font-size: 14px;
+  }
+}
+
+/* Mobile - Small (max-width: 320px) */
+@media screen and (max-width: 320px) {
+  .dashboard {
+    padding: 5px;
+    gap: 8px;
+  }
+
+  #selfieVideo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .widget {
+    max-width: 100%;
+    height: 100px;
+  }
+
+  .appCircle {
+    width: 30px;
+    height: 30px;
+  }
+
+  .facesilhouette {
+    font-size: 35px;
+  }
 }

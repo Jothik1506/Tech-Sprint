@@ -28,6 +28,7 @@ statusDisplay.style.background = "red";
 statusDisplay.style.color = "white";
 statusDisplay.style.padding = "5px";
 statusDisplay.style.zIndex = "9999";
+statusDisplay.style.display = "none"; // Hidden
 document.body.appendChild(statusDisplay);
 
 function logStatus(msg) {
@@ -215,3 +216,25 @@ async function processFrame() {
 }
 
 startCamera();
+
+// ------------------- Bookmark Bar -------------------
+// Bookmark clicks
+document.querySelectorAll('.bookmark').forEach(bookmark => {
+    bookmark.addEventListener('click', () => {
+        const url = bookmark.getAttribute('data-url');
+        if (url) {
+            navigate(url);
+        }
+    });
+});
+
+// Bookmark search
+const bookmarkSearchInput = document.querySelector('.bookmarkSearchInput');
+if (bookmarkSearchInput) {
+    bookmarkSearchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            navigate(bookmarkSearchInput.value);
+        }
+    });
+}
+

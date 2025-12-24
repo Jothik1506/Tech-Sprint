@@ -1,4 +1,5 @@
 import cv2
+import mediapipe as mp
 
 import base64
 import numpy as np
@@ -56,6 +57,15 @@ model = YOLO('yolov8n-pose.pt')
 squat_count = 0
 current_stage = None
 
+# --- MediaPipe Setup ---
+mp_face_mesh = mp.solutions.face_mesh
+face_mesh = mp_face_mesh.FaceMesh(
+    max_num_faces=1,
+    refine_landmarks=True,
+    min_detection_confidence=0.5,
+    min_tracking_confidence=0.5
+)
+
 # --- Endpoints ---
 
 @app.get("/api/status")
@@ -100,6 +110,36 @@ def resolve_url(req: ResolveRequest):
         url = f"https://www.google.com/search?q={q}"
         
     return {"url": url}
+
+@app.post("/api/face_auth")
+def face_auth(req: ImageRequest = Body(...)):
+    try:
+        # Decode
+        if "," in req.image:
+             header, encoded = req.image.split(",", 1)
+        else:
+             encoded = req.image
+             
+        nparr = np.frombuffer(base64.b64decode(encoded), np.uint8)
+        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        # Convert to RGB for MediaPipe
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        
+        results = face_mesh.process(rgb_frame)
+        
+        authorized = False
+        message = "Scanning..."
+        
+        if results.multi_face_landmarks:
+            authorized = True
+            message = "Authorized: User"
+            
+        return {"authorized": authorized, "message": message}
+        
+    except Exception as e:
+        print(f"Face Auth Error: {e}")
+        return {"authorized": False, "message": "Error"}
 
 @app.post("/api/exercise")
 def process_exercise(req: ImageRequest = Body(...)):

@@ -14,17 +14,59 @@
     <!-- DASHBOARD -->
     <div id="dashboard" class="dashboard">
 
-        <!-- LEFT PANEL: Notifications & Exercise -->
-        <div class="leftPanel">
-            <div class="card exerciseCard">
-                <h3>Movement Tracking</h3>
-                <div id="exerciseStatus">Status: Resting</div>
-                <div id="exerciseCount">Squats: 0</div>
-                <video id="selfieVideo" autoplay muted></video>
-                <div class="exerciseOverlay">
-                    <p>1. Calm down performing this exercise</p>
-                    <div class="detectionBox">Movement Detected</div>
+        <!-- BOOKMARK BAR - TOP -->
+        <div class="bookmarkBar">
+            <!-- Top row: Bookmarks -->
+            <div class="bookmarkRow">
+                <div class="bookmark" data-url="https://youtube.com">
+                    <span class="bookmarkIcon">▶️</span>
+                    <span class="bookmarkLabel">(12) YouTube</span>
                 </div>
+                <div class="bookmark" data-url="https://spaces.google.com">
+                    <span class="bookmarkIcon">💬</span>
+                    <span class="bookmarkLabel">Spaces - Hugging F...</span>
+                </div>
+                <div class="bookmark" data-url="https://notebooklm.google.com">
+                    <span class="bookmarkIcon">📝</span>
+                    <span class="bookmarkLabel">NotebookLM</span>
+                </div>
+                <div class="bookmark" data-url="https://learn.example.com">
+                    <span class="bookmarkIcon">📚</span>
+                    <span class="bookmarkLabel">Learn courses</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH BAR - BOTTOM -->
+        <div class="bookmarkSearchRow">
+            <span class="navBtn">←</span>
+            <span class="navBtn">→</span>
+            <span class="navBtn">⟳</span>
+            <span class="navBtn">🔍</span>
+            <input type="text" placeholder="Enter search or web address" class="bookmarkSearchInput" />
+        </div>
+
+        <!-- LEFT PANEL: Spotify & Face Recognition -->
+        <div class="leftPanel">
+            <div class="card musicCard">
+                <div class="musicHeader">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
+                        alt="Spotify" width="20">
+                    <span>Spotify</span>
+                </div>
+                <div class="musicControls">
+                    <button>⏮</button>
+                    <button>▶</button>
+                    <button>⏭</button>
+                </div>
+            </div>
+
+            <div class="card faceCard">
+                <div class="faceHeader">
+                    <span>Facial Reco</span>
+                </div>
+                <div class="faceStatus" id="authStatus">Authorized: User</div>
+                <div class="facesilhouette">👤</div>
             </div>
         </div>
 
@@ -35,13 +77,33 @@
                 <span class="g-logo">G</span>
                 <input id="searchInput" type="text" placeholder="Search the web" />
                 <div class="searchIcons">
-                    <span>🎤</span>
-                    <span>📷</span>
+                    <svg class="icon-mic" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="9" r="3" fill="#4285F4" />
+                        <path
+                            d="M12 15C10.34 15 9 13.66 9 12V9C9 7.34 10.34 6 12 6C13.66 6 15 7.34 15 9V12C15 13.66 13.66 15 12 15Z"
+                            fill="#4285F4" />
+                        <path
+                            d="M17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12H5C5 15.53 7.61 18.43 11 18.92V21H13V18.92C16.39 18.43 19 15.53 19 12H17Z"
+                            fill="#4285F4" />
+                    </svg>
+                    <svg class="icon-lens" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="url(#lensGradient)" />
+                        <defs>
+                            <linearGradient id="lensGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4285F4;stop-opacity:1" />
+                                <stop offset="25%" style="stop-color:#EA4335;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#FBBC04;stop-opacity:1" />
+                                <stop offset="75%" style="stop-color:#34A853;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#4285F4;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
                 </div>
             </div>
 
             <!-- Quick Apps -->
             <div class="quickApps">
+                <div class="appCircle"></div>
                 <div class="appCircle"></div>
                 <div class="appCircle"></div>
                 <div class="appCircle"></div>
@@ -65,33 +127,57 @@
                     <div class="widgetHeader">Top Stories</div>
                     <div id="newsData">Loading...</div>
                 </div>
+                <div class="widget spotifyWidget">
+                    <div class="widgetHeader">Spotify</div>
+                    <div class="widgetContent">Now Playing</div>
+                </div>
             </div>
         </div>
 
-        <!-- RIGHT PANEL: Spotify & Profile -->
+        <!-- RIGHT PANEL: Movement Tracking & Exercise -->
         <div class="rightPanel">
-            <div class="card musicCard">
-                <div class="musicHeader">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
-                        alt="Spotify" width="20">
-                    <span>Spotify</span>
-                </div>
-                <div class="musicControls">
-                    <button>⏮</button>
-                    <button>▶</button>
-                    <button>⏭</button>
+            <div class="card exerciseCard">
+                <h3>Movement Tracking</h3>
+                <div id="exerciseStatus">Status: Resting</div>
+                <div id="exerciseCount">Squats: 0</div>
+                <video id="selfieVideo" autoplay muted></video>
+                <div class="exerciseOverlay">
+                    <p>1. Calm down performing this exercise</p>
+                    <div class="detectionBox">Movement Detected</div>
                 </div>
             </div>
+        </div>
 
-            <div class="card faceCard">
-                <div class="faceHeader">
-                    <span>Facial Reco</span>
-                </div>
-                <div class="faceStatus" id="authStatus">Scanning...</div>
-                <div class="facesilhouette">👤</div>
+        <!-- BOOKMARK BAR -->
+        <div class="bookmarkBar">
+            <div class="bookmark" data-url="https://youtube.com">
+                <span class="bookmarkIcon">▶️</span>
+                <span class="bookmarkLabel">(12) YouTube</span>
             </div>
-
-            <div class="settingsIcon">⚙</div>
+            <div class="bookmark" data-url="https://spaces.google.com">
+                <span class="bookmarkIcon">💬</span>
+                <span class="bookmarkLabel">Spaces - Hugging F...</span>
+            </div>
+            <div class="bookmark" data-url="https://notebooklm.google.com">
+                <span class="bookmarkIcon">📝</span>
+                <span class="bookmarkLabel">NotebookLM</span>
+            </div>
+            <div class="bookmark" data-url="https://learn.example.com">
+                <span class="bookmarkIcon">📚</span>
+                <span class="bookmarkLabel">Learn courses</span>
+            </div>
+            <div class="bookmarkMore">
+                <span>⋯</span>
+            </div>
+            <div class="bookmarkSearch">
+                <input type="text" placeholder="Enter search or web address" class="bookmarkSearchInput" />
+                <div class="bookmarkIcons">
+                    <span class="bookmarkIconBtn">👤</span>
+                    <span class="bookmarkIconBtn">⬇️</span>
+                    <span class="bookmarkIconBtn">☰</span>
+                    <span class="bookmarkIconBtn">⚙️</span>
+                </div>
+            </div>
         </div>
 
     </div>
