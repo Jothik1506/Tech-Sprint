@@ -18,6 +18,34 @@ const authStatus = document.getElementById("authStatus");
 // State
 const BACKEND_URL = "http://localhost:5000/api";
 
+// Default Shortcuts
+const defaultShortcuts = [
+    { name: "YouTube", url: "https://www.youtube.com", icon: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64" },
+    { name: "Google", url: "https://www.google.com", icon: "https://www.google.com/s2/favicons?domain=google.com&sz=64" },
+    { name: "Gmail", url: "https://mail.google.com", icon: "https://www.google.com/s2/favicons?domain=mail.google.com&sz=64" },
+    { name: "GitHub", url: "https://www.github.com", icon: "https://www.google.com/s2/favicons?domain=github.com&sz=64" },
+    { name: "ChatGPT", url: "https://chat.openai.com", icon: "https://www.google.com/s2/favicons?domain=openai.com&sz=64" },
+    { name: "Twitter", url: "https://www.twitter.com", icon: "https://www.google.com/s2/favicons?domain=twitter.com&sz=64" },
+    { name: "WhatsApp", url: "https://web.whatsapp.com", icon: "https://www.google.com/s2/favicons?domain=whatsapp.com&sz=64" },
+    { name: "Canva", url: "https://www.canva.com", icon: "https://www.google.com/s2/favicons?domain=canva.com&sz=64" }
+];
+
+function renderShortcuts() {
+    quickAppsContainer.innerHTML = "";
+    defaultShortcuts.forEach(app => {
+        const appBtn = document.createElement("div");
+        appBtn.className = "appCircle";
+        appBtn.title = app.name;
+        appBtn.style.backgroundImage = `url('${app.icon}')`;
+        appBtn.style.backgroundSize = "60%"; // Pro-look sizing
+        appBtn.style.backgroundRepeat = "no-repeat";
+        appBtn.style.backgroundPosition = "center";
+
+        appBtn.onclick = () => navigate(app.url);
+        quickAppsContainer.appendChild(appBtn);
+    });
+}
+
 // ------------------- Navigation -------------------
 const statusDisplay = document.createElement("div");
 statusDisplay.style.position = "fixed";
@@ -429,6 +457,10 @@ document.addEventListener("click", (e) => {
     }
 });
 
+// Initialize
+renderShortcuts();
+
+
 // ------------------- WALLPAPER CUSTOMIZATION -------------------
 const browserBackground = document.getElementById("browserBackground");
 const wallpaperPanel = document.getElementById("wallpaperPanel");
@@ -455,8 +487,8 @@ function setWallpaper(src) {
 }
 
 // Load saved wallpaper
-const savedWallpaper = localStorage.getItem("customWallpaper");
-if (savedWallpaper) setWallpaper(savedWallpaper);
+const initialWallpaper = localStorage.getItem("customWallpaper");
+if (initialWallpaper) setWallpaper(initialWallpaper);
 
 // Toggle Panel
 if (customizeBtn) customizeBtn.onclick = () => wallpaperPanel.classList.toggle("hidden");
