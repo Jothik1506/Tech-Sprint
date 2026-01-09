@@ -9,11 +9,11 @@ const quickAppsContainer = document.querySelector(".quickApps");
 const weatherDataEl = document.getElementById("weatherData");
 const stocksDataEl = document.getElementById("stocksData");
 const newsDataEl = document.getElementById("newsData");
-const exerciseCountEl = document.getElementById("exerciseCount");
-const exerciseStatusEl = document.getElementById("exerciseStatus");
-const detectionBox = document.querySelector(".detectionBox");
 const videoEl = document.getElementById("selfieVideo");
 const authStatus = document.getElementById("authStatus");
+// const exerciseCountEl = document.getElementById("exerciseCount");
+// const exerciseStatusEl = document.getElementById("exerciseStatus");
+// const detectionBox = document.querySelector(".detectionBox");
 
 // State
 const BACKEND_URL = "http://localhost:5000/api";
@@ -22,10 +22,10 @@ const BACKEND_URL = "http://localhost:5000/api";
 const defaultShortcuts = [
     { name: "YouTube", url: "https://www.youtube.com", icon: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64" },
     { name: "Google", url: "https://www.google.com", icon: "https://www.google.com/s2/favicons?domain=google.com&sz=64" },
-    { name: "Gmail", url: "https://mail.google.com", icon: "https://www.google.com/s2/favicons?domain=mail.google.com&sz=64" },
+    { name: "Browser", url: "https://google.com", icon: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Earth_icon.svg" }, // Placeholder for Earth icon
     { name: "GitHub", url: "https://www.github.com", icon: "https://www.google.com/s2/favicons?domain=github.com&sz=64" },
     { name: "ChatGPT", url: "https://chat.openai.com", icon: "https://www.google.com/s2/favicons?domain=openai.com&sz=64" },
-    { name: "Twitter", url: "https://www.twitter.com", icon: "https://www.google.com/s2/favicons?domain=twitter.com&sz=64" },
+    { name: "X", url: "https://twitter.com", icon: "https://www.google.com/s2/favicons?domain=x.com&sz=64" },
     { name: "WhatsApp", url: "https://web.whatsapp.com", icon: "https://www.google.com/s2/favicons?domain=whatsapp.com&sz=64" },
     { name: "Canva", url: "https://www.canva.com", icon: "https://www.google.com/s2/favicons?domain=canva.com&sz=64" }
 ];
@@ -303,19 +303,19 @@ async function processFrame() {
         const data = await res.json();
 
         if (data.count !== undefined) {
-            exerciseCountEl.innerText = `Squats: ${data.count}`;
-            exerciseStatusEl.innerText = `Stage: ${data.stage || "Ready"}`;
+            // exerciseCountEl.innerText = `Squats: ${data.count}`;
+            // exerciseStatusEl.innerText = `Stage: ${data.stage || "Ready"}`;
 
             if (data.stage === "down" || data.stage === "up") {
-                detectionBox.style.display = "block";
-                setTimeout(() => detectionBox.style.display = "none", 1000);
+                // detectionBox.style.display = "block";
+                // setTimeout(() => detectionBox.style.display = "none", 1000);
             }
         }
     } catch (e) {
         // console.log("CV Error:", e);
     }
 
-    if (authStatus.innerText === "Scanning...") {
+    if (authStatus && authStatus.innerText === "Scanning...") {
         setTimeout(() => authStatus.innerText = "Authorized: User", 3000);
     }
 }

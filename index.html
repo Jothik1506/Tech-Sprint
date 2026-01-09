@@ -7,6 +7,7 @@
     <title>Wellness Browser</title>
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -19,8 +20,39 @@
 
 
 
-        <!-- LEFT PANEL: Spotify & Face Recognition -->
+        <!-- LEFT PANEL: Reminders & Spotify -->
         <div class="leftPanel">
+            <!-- Wellness Reminders (Error State) -->
+            <div class="card wellnessReminders errorState">
+                <div class="cardHeader">
+                    <span>💪 Wellness Reminders</span>
+                </div>
+                <div class="errorContent">
+                    <div class="warningBanner">
+                        ⚠ Backend Connection Failed
+                    </div>
+                    <p class="errorMsg">Cannot reach backend server.<br>Is it running?</p>
+                    <div class="fixSteps">
+                        <strong>To fix:</strong>
+                        <ol>
+                            <li>Open terminal</li>
+                            <li>cd backend</li>
+                            <li>python server.py</li>
+                            <li>Wait for "Server starting..."</li>
+                            <li>Refresh this page</li>
+                        </ol>
+                    </div>
+                    <div class="retryMsg">
+                        ⚠ Cannot connect to backend server
+                    </div>
+                    <div class="smallHint">
+                        Please ensure backend is running on http://localhost:5000
+                        <br><br>
+                        Or run: start_backend.bat
+                    </div>
+                </div>
+            </div>
+
             <div class="card spotifyHub">
                 <div class="musicHeader">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
@@ -30,23 +62,25 @@
                 <div class="spotifySearchBox">
                     <input type="text" id="spotifySearchInput" placeholder="Search track/artist..." />
                     <button id="spotifySearchBtn">🔍</button>
+                    <!-- Small green indicator to match screenshot -->
+                    <div class="statusDot"></div>
                 </div>
                 <div id="spotifyResults" class="spotifyResults hidden"></div>
                 <div class="spotifyPlayerContainer">
+                    <!-- Error state in player as shown in screenshot -->
+                    <div id="spotifyErrorPlaceholder" class="hidden">
+                        <div class="spotifyErrorMsg">
+                            We can't seem to find the page you are looking for.
+                        </div>
+                        <button class="spotifyHomeBtn">Home</button>
+                    </div>
+
                     <iframe id="spotifyPlayer"
                         src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM3M?utm_source=generator&theme=0"
                         width="100%" height="80" frameBorder="0" allowfullscreen=""
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                         loading="lazy"></iframe>
                 </div>
-            </div>
-
-            <div class="card faceCard">
-                <div class="faceHeader">
-                    <span>Facial Reco</span>
-                </div>
-                <div class="faceStatus" id="authStatus">Authorized: User</div>
-                <div class="facesilhouette">👤</div>
             </div>
         </div>
 
@@ -93,34 +127,32 @@
                 <div class="appCircle"></div>
             </div>
 
-            <!-- Widgets Row -->
-            <div class="widgetsRow">
-                <div class="widget weatherWidget">
-                    <div class="widgetHeader">Loading...</div>
-                    <div class="widgetContent" id="weatherData">Create backend conn...</div>
-                </div>
-                <div class="widget graphWidget">
-                    <div class="widgetHeader">Market</div>
-                    <div id="stocksData">Loading...</div>
-                </div>
-                <div class="widget newsWidget">
-                    <div class="widgetHeader">Top Stories</div>
-                    <div id="newsData">Loading...</div>
-                </div>
-
-            </div>
+            <!-- Widgets Row (Hidden to match screenshot) -->
+            <!-- <div class="widgetsRow"> -->
+            <!-- </div> -->
         </div>
 
-        <!-- RIGHT PANEL: Movement Tracking & Exercise -->
+        <!-- RIGHT PANEL: Face Scanner -->
         <div class="rightPanel">
-            <div class="card exerciseCard">
-                <h3>Movement Tracking</h3>
-                <div id="exerciseStatus">Status: Resting</div>
-                <div id="exerciseCount">Squats: 0</div>
-                <video id="selfieVideo" autoplay muted></video>
-                <div class="exerciseOverlay">
-                    <p>1. Calm down performing this exercise</p>
-                    <div class="detectionBox">Movement Detected</div>
+            <div class="card faceScannerCard">
+                <div class="cardHeaderCenter">
+                    <h3>Face Scanner</h3>
+                </div>
+
+                <div class="errorBannerSmall">
+                    ✕ Connection Error: Cannot reach backend server.<br>Is it running?
+                </div>
+
+                <div class="videoWrapper">
+                    <video id="selfieVideo" autoplay muted></video>
+                </div>
+
+                <div class="faceScanStatus">
+                    <span class="eyeIcon">👁</span> Analyzing facial expressions to detect fatigue and stress levels
+                </div>
+
+                <div class="analyzingLoader" id="authStatus">
+                    <span class="statusDot on"></span> Analyzing...
                 </div>
             </div>
         </div>

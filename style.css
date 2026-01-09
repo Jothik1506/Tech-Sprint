@@ -102,6 +102,73 @@ html {
   gap: 20px;
 }
 
+/* WELLNESS REMINDERS CARD */
+.wellnessReminders {
+  background: rgba(30, 20, 30, 0.6);
+  border: 1px solid rgba(255, 100, 100, 0.2);
+  min-height: 250px;
+}
+
+.wellnessReminders .cardHeader {
+  color: #a06cd5;
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.errorState {
+  border-color: rgba(255, 87, 87, 0.3);
+}
+
+.warningBanner {
+  background: rgba(255, 165, 0, 0.15);
+  color: #ffb74d;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.errorMsg {
+  font-size: 12px;
+  color: #ddd;
+  margin-bottom: 15px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.fixSteps {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #ccc;
+  text-align: left;
+}
+
+.fixSteps ol {
+  padding-left: 20px;
+  margin: 5px 0;
+}
+
+.retryMsg {
+  color: #ffb74d;
+  font-size: 11px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.smallHint {
+  font-size: 10px;
+  color: #888;
+  margin-top: 10px;
+  text-align: center;
+  line-height: 1.3;
+}
+
 /* SPOTIFY HUB BEAUTIFICATION */
 .spotifyHub {
   padding: 20px !important;
@@ -121,7 +188,16 @@ html {
 .spotifySearchBox {
   display: flex;
   gap: 10px;
+  align-items: center;
   margin-bottom: 15px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  background: #1DB954;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #1DB954;
 }
 
 #spotifySearchInput {
@@ -276,21 +352,79 @@ html {
   gap: 20px;
 }
 
-.exerciseCard {
+.faceScannerCard {
   text-align: center;
   align-items: center;
+  background: rgba(20, 20, 25, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+}
+
+.cardHeaderCenter h3 {
+  margin: 0 0 15px 0;
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+}
+
+.errorBannerSmall {
+  background: rgba(255, 50, 50, 0.15);
+  color: #ff6b6b;
+  font-size: 11px;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.4;
+  border: 1px solid rgba(255, 50, 50, 0.2);
+}
+
+.videoWrapper {
+  width: 100%;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.faceScanStatus {
+  font-size: 11px;
+  color: #aaa;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.analyzingLoader {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.statusDot.on {
+  background: #4CAF50;
+  box-shadow: 0 0 8px #4CAF50;
 }
 
 #selfieVideo {
   width: 100%;
-  max-width: 220px;
-  aspect-ratio: 1/1;
+  aspect-ratio: 4/3;
   background: #000;
-  border-radius: 50%;
   object-fit: cover;
   transform: scaleX(-1);
-  margin: 10px 0;
-  border: 4px solid rgba(255, 255, 255, 0.1);
+  display: block;
 }
 
 /* GLOBAL BOTTOM BROWSER BAR */
