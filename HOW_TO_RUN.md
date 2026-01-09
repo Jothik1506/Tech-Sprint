@@ -5,7 +5,7 @@
 ### Terminal 1 - Backend Server (Python FastAPI)
 
 ```powershell
-cd "d:\VS CODE\Hackathon\wellness-hackathron-\backend"
+cd "c:\Users\Dell\OneDrive\Desktop\New folder\Microsoft\Imagine-Cup\backend"
 python server.py
 ```
 
@@ -16,8 +16,8 @@ This will start the FastAPI server on **http://127.0.0.1:5000** with YOLOv8 pose
 ### Terminal 2 - Frontend (Electron Browser)
 
 ```powershell
-cd "d:\VS CODE\Hackathon\wellness-hackathron-"
-npx electron-nightly .
+cd "c:\Users\Dell\OneDrive\Desktop\New folder\Microsoft\Imagine-Cup"
+npm start
 ```
 
 This will launch the Electron-based Wellness Browser application.
@@ -29,16 +29,15 @@ This will launch the Electron-based Wellness Browser application.
 **Frontend (Electron)**: ✅ **RUNNING**
 - The Electron window should be visible on your screen
 
-**Backend (FastAPI)**: ⚠️ **Needs to be started in a fresh terminal**
-- There was a port conflict from the previous instance
-- Open a new terminal and run the backend command above
+**Backend (FastAPI)**: ✅ **RUNNING**
+- I have already started this for you in the background.
 
 ---
 
 ## 📝 Important Notes
 
-1. **Always run from the correct directory**: `d:\VS CODE\Hackathon\wellness-hackathron-`
-2. **Backend must be in**: `wellness-hackathron-\backend\` folder
+1. **Always run from the correct directory**: `c:\Users\Dell\OneDrive\Desktop\New folder\Microsoft\Imagine-Cup`
+2. **Backend must be in**: `backend\` folder
 3. **Start backend FIRST**, then frontend
 4. **To stop**: Press `Ctrl+C` in each terminal
 

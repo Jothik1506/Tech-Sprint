@@ -16,7 +16,7 @@ const authStatus = document.getElementById("authStatus");
 // const detectionBox = document.querySelector(".detectionBox");
 
 // State
-const BACKEND_URL = "http://localhost:5000/api";
+const BACKEND_URL = "http://127.0.0.1:5000/api";
 
 // Default Shortcuts
 const defaultShortcuts = [
@@ -125,7 +125,13 @@ function showHome() {
 }
 
 // Navigation Handlers
-document.getElementById("backBtn").onclick = () => { if (webview.canGoBack()) webview.goBack(); };
+document.getElementById("backBtn").onclick = () => {
+    if (webview.canGoBack()) {
+        webview.goBack();
+    } else {
+        showHome();
+    }
+};
 document.getElementById("forwardBtn").onclick = () => { if (webview.canGoForward()) webview.goForward(); };
 document.getElementById("reloadBtn").onclick = () => { webview.reload(); };
 
@@ -156,6 +162,26 @@ urlBar.onkeydown = (e) => {
 
 async function fetchData() {
     try {
+        // Check Backend Status First
+        fetch(`${BACKEND_URL.replace('/api', '')}/api/status`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === "running") {
+                    const wellnessCard = document.getElementById("wellnessCard");
+                    const remindersSuccess = document.getElementById("remindersSuccessContent");
+                    const remindersError = document.getElementById("remindersErrorContent");
+                    const faceError = document.getElementById("faceScanError");
+
+                    if (wellnessCard) wellnessCard.classList.remove("errorState");
+                    if (remindersSuccess) remindersSuccess.classList.remove("hidden");
+                    if (remindersError) remindersError.classList.add("hidden");
+                    if (faceError) faceError.classList.add("hidden");
+                }
+            })
+            .catch(err => {
+                console.error("Backend status check failed:", err);
+            });
+
         // Weather
         fetch(`${BACKEND_URL}/weather`)
             .then(r => r.json())
@@ -174,7 +200,14 @@ async function fetchData() {
                 apps.forEach(app => {
                     const div = document.createElement("div");
                     div.className = "appCircle";
-                    div.innerHTML = `<span style="display:flex;justify-content:center;align-items:center;height:100%;font-weight:bold;color:#333">${app.icon}</span>`;
+                    if (app.icon.startsWith("http")) {
+                        div.style.backgroundImage = `url('${app.icon}')`;
+                        div.style.backgroundSize = "60%";
+                        div.style.backgroundRepeat = "no-repeat";
+                        div.style.backgroundPosition = "center";
+                    } else {
+                        div.innerHTML = `<span style="display:flex;justify-content:center;align-items:center;height:100%;font-weight:bold;color:#333">${app.icon}</span>`;
+                    }
                     div.title = app.name;
                     div.onclick = () => navigate(app.url);
                     quickAppsContainer.appendChild(div);

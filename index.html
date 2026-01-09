@@ -22,12 +22,39 @@
 
         <!-- LEFT PANEL: Reminders & Spotify -->
         <div class="leftPanel">
-            <!-- Wellness Reminders (Error State) -->
-            <div class="card wellnessReminders errorState">
+            <!-- Wellness Reminders -->
+            <div id="wellnessCard" class="card wellnessReminders errorState">
                 <div class="cardHeader">
                     <span>💪 Wellness Reminders</span>
                 </div>
-                <div class="errorContent">
+
+                <!-- Success Content (Hidden by default) -->
+                <div id="remindersSuccessContent" class="remindersContent hidden">
+                    <div class="reminderItem">
+                        <span class="reminderIcon">💧</span>
+                        <div class="reminderText">
+                            <strong>Stay Hydrated</strong>
+                            <p>Water break time!</p>
+                        </div>
+                    </div>
+                    <div class="reminderItem">
+                        <span class="reminderIcon">🧘</span>
+                        <div class="reminderText">
+                            <strong>Posture</strong>
+                            <p>Correct your sitting position.</p>
+                        </div>
+                    </div>
+                    <div class="reminderItem">
+                        <span class="reminderIcon">👀</span>
+                        <div class="reminderText">
+                            <strong>Eye Care</strong>
+                            <p>Look at something 20ft away.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Content -->
+                <div id="remindersErrorContent" class="errorContent">
                     <div class="warningBanner">
                         ⚠ Backend Connection Failed
                     </div>
@@ -53,7 +80,7 @@
                 </div>
             </div>
 
-            <div class="card spotifyHub">
+            <div id="spotifyHubCard" class="card spotifyHub">
                 <div class="musicHeader">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
                         alt="Spotify" width="20">
@@ -139,7 +166,7 @@
                     <h3>Face Scanner</h3>
                 </div>
 
-                <div class="errorBannerSmall">
+                <div id="faceScanError" class="errorBannerSmall">
                     ✕ Connection Error: Cannot reach backend server.<br>Is it running?
                 </div>
 

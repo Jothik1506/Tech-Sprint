@@ -43,12 +43,12 @@ WEATHER_DATA = {
 }
 
 DEFAULT_APPS = [
-    {"name": "YouTube", "url": "https://youtube.com", "icon": "Y"},
-    {"name": "Gmail", "url": "https://mail.google.com", "icon": "M"},
-    {"name": "Maps", "url": "https://maps.google.com", "icon": "G"},
-    {"name": "Twitter", "url": "https://twitter.com", "icon": "T"},
-    {"name": "LinkedIn", "url": "https://linkedin.com", "icon": "L"},
-    {"name": "GitHub", "url": "https://github.com", "icon": "H"},
+    {"name": "YouTube", "url": "https://youtube.com", "icon": "https://www.google.com/s2/favicons?domain=youtube.com&sz=64"},
+    {"name": "Gmail", "url": "https://mail.google.com", "icon": "https://www.google.com/s2/favicons?domain=gmail.com&sz=64"},
+    {"name": "Maps", "url": "https://maps.google.com", "icon": "https://www.google.com/s2/favicons?domain=google.com&sz=64"},
+    {"name": "Twitter", "url": "https://twitter.com", "icon": "https://www.google.com/s2/favicons?domain=x.com&sz=64"},
+    {"name": "LinkedIn", "url": "https://linkedin.com", "icon": "https://www.google.com/s2/favicons?domain=linkedin.com&sz=64"},
+    {"name": "GitHub", "url": "https://github.com", "icon": "https://www.google.com/s2/favicons?domain=github.com&sz=64"},
 ]
 
 NEWS_DATA = [
