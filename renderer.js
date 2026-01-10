@@ -11,6 +11,7 @@ const stocksDataEl = document.getElementById("stocksData");
 const newsDataEl = document.getElementById("newsData");
 const videoEl = document.getElementById("selfieVideo");
 const authStatus = document.getElementById("authStatus");
+const faceScanStatus = document.querySelector(".faceScanStatus"); // Add selector
 // const exerciseCountEl = document.getElementById("exerciseCount");
 // const exerciseStatusEl = document.getElementById("exerciseStatus");
 // const detectionBox = document.querySelector(".detectionBox");
@@ -21,8 +22,7 @@ const BACKEND_URL = "http://127.0.0.1:5000/api";
 // Default Shortcuts
 const defaultShortcuts = [
     { name: "YouTube", url: "https://www.youtube.com", icon: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64" },
-    { name: "Google", url: "https://www.google.com", icon: "https://www.google.com/s2/favicons?domain=google.com&sz=64" },
-    { name: "Browser", url: "https://google.com", icon: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Earth_icon.svg" }, // Placeholder for Earth icon
+    { name: "Co-pilot", url: "https://copilot.microsoft.com", icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Microsoft_365_Copilot_Icon.svg/64px-Microsoft_365_Copilot_Icon.svg.png" },
     { name: "GitHub", url: "https://www.github.com", icon: "https://www.google.com/s2/favicons?domain=github.com&sz=64" },
     { name: "ChatGPT", url: "https://chat.openai.com", icon: "https://www.google.com/s2/favicons?domain=openai.com&sz=64" },
     { name: "X", url: "https://twitter.com", icon: "https://www.google.com/s2/favicons?domain=x.com&sz=64" },
@@ -232,75 +232,75 @@ async function fetchData() {
     }
 }
 
-// No interval for Apps/News to save bandwidth, only on load or reload
+// ------------------- Startup Reminders -------------------
+function showStartupReminders() {
+    const container = document.getElementById("reminderContainer");
+    if (!container) return;
 
-// ------------------- Spotify Hub Logic -------------------
-const spotifySearchInput = document.getElementById("spotifySearchInput");
-const spotifySearchBtn = document.getElementById("spotifySearchBtn");
-const spotifyResults = document.getElementById("spotifyResults");
-const spotifyPlayer = document.getElementById("spotifyPlayer");
+    // Ensure container is visible to start receiving cards
+    container.classList.remove("hidden");
+    container.innerHTML = ""; // Clear any existing
 
-async function performSpotifySearch() {
-    const query = spotifySearchInput.value.trim();
-    if (!query) return;
+    // Helper to schedule a reminder
+    const scheduleReminder = (data, delayMs, durationMs) => {
+        setTimeout(() => {
+            const card = document.createElement("div");
+            card.className = "bottomReminderCard";
+            card.innerHTML = `
+                <div class="icon">${data.icon}</div>
+                <div class="text">
+                    <strong>${data.title}</strong>
+                    <p>${data.text}</p>
+                </div>
+            `;
 
-    // Loading State
-    const originalBtn = spotifySearchBtn.innerHTML;
-    spotifySearchBtn.innerHTML = "⏳";
-    spotifySearchBtn.disabled = true;
+            // Allow manual dismiss
+            card.onclick = () => {
+                card.style.opacity = "0";
+                setTimeout(() => card.remove(), 300);
+            };
 
-    try {
-        const res = await fetch(`${BACKEND_URL}/spotify/search?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
+            container.appendChild(card);
 
-        if (data.tracks && data.tracks.length > 0) {
-            spotifyResults.innerHTML = "";
-            spotifyResults.classList.remove("hidden");
+            // Auto-vanish after duration
+            setTimeout(() => {
+                if (card.parentNode) {
+                    card.style.opacity = "0";
+                    card.style.transform = "translateY(20px)"; // Slide down out
+                    setTimeout(() => card.remove(), 500);
+                }
+            }, durationMs);
 
-            data.tracks.forEach(track => {
-                const div = document.createElement("div");
-                div.className = "spotifyResultItem";
-                div.innerHTML = `
-                    <img src="${track.image || 'https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg'}" width="30" height="30">
-                    <div class="trackInfo">
-                        <div class="trackName">${track.name}</div>
-                        <div class="trackArtist">${track.artist}</div>
-                    </div>
-                `;
-                div.onclick = () => {
-                    const embedUrl = `https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`;
-                    spotifyPlayer.src = embedUrl;
-                    spotifyResults.classList.add("hidden");
-                    spotifySearchInput.value = "";
-                };
-                spotifyResults.appendChild(div);
-            });
-        } else if (data.note) {
-            logStatus("Spotify: Using mock results (check console)");
-            console.warn(data.note);
-            // Even in mock mode, clicking often works if a real URI was provided in the mock
-        }
-    } catch (err) {
-        console.error("Spotify Search Error:", err);
-    } finally {
-        spotifySearchBtn.innerHTML = originalBtn;
-        spotifySearchBtn.disabled = false;
-    }
-}
-
-if (spotifySearchBtn) {
-    spotifySearchBtn.onclick = performSpotifySearch;
-    spotifySearchInput.onkeydown = (e) => {
-        if (e.key === "Enter") performSpotifySearch();
+        }, delayMs);
     };
 
-    // Close results on click outside
-    document.addEventListener("click", (e) => {
-        if (!spotifyResults.contains(e.target) && e.target !== spotifySearchInput) {
-            spotifyResults.classList.add("hidden");
-        }
-    });
+    // --- TIMELINE CONFIGURATION ---
+    // User Request: Water at 30s (30000ms), last 8s.
+
+    // 1. Posture (Immediate/Early check) - Let's put this early (e.g., 10s)
+    scheduleReminder(
+        { icon: "🧘", title: "Posture", text: "Correct your sitting position." },
+        10000, // Delay: 10 seconds
+        8000   // Duration: 8 seconds
+    );
+
+    // 2. Water (The specific request: "after browser there for 30 seconds")
+    scheduleReminder(
+        { icon: "💧", title: "Stay Hydrated", text: "Water break time!" },
+        30000, // Delay: 30 seconds
+        8000   // Duration: 8 seconds ("after that 8 seconds it should vanish")
+    );
+
+    // 3. Eye Care (Late check) - Let's put this after water (e.g., 50s)
+    scheduleReminder(
+        { icon: "👀", title: "Eye Care", text: "Look at something 20ft away." },
+        50000, // Delay: 50 seconds
+        8000   // Duration: 8 seconds
+    );
 }
+
+// No interval for Apps/News to save bandwidth, only on load or reload
+
 
 fetchData();
 // No interval for Apps/News to save bandwidth, only on load or reload
@@ -328,28 +328,39 @@ async function processFrame() {
     const dataUrl = canvas.toDataURL("image/jpeg");
 
     try {
-        const res = await fetch(`${BACKEND_URL}/exercise`, {
+        const res = await fetch(`${BACKEND_URL}/analyze_face`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ image: dataUrl })
         });
         const data = await res.json();
 
-        if (data.count !== undefined) {
-            // exerciseCountEl.innerText = `Squats: ${data.count}`;
-            // exerciseStatusEl.innerText = `Stage: ${data.stage || "Ready"}`;
+        if (data.detected) {
+            // Update UI with specific state
+            if (faceScanStatus) {
+                faceScanStatus.innerHTML = `<span class="eyeIcon">👁</span> Detected: <strong>${data.state}</strong> - ${data.details}`;
 
-            if (data.stage === "down" || data.stage === "up") {
-                // detectionBox.style.display = "block";
-                // setTimeout(() => detectionBox.style.display = "none", 1000);
+                // Style changes based on state
+                if (data.state === "Yawning" || data.state === "Drowsy") {
+                    faceScanStatus.style.color = "#ff4444"; // Red alert
+                } else if (data.state === "Stressed") {
+                    faceScanStatus.style.color = "#ffbb33"; // Orange warning
+                } else {
+                    faceScanStatus.style.color = "#00C851"; // Green good
+                    // Reset if previously set
+                    faceScanStatus.style.color = "";
+                }
             }
+
+            if (authStatus) {
+                authStatus.innerHTML = `<span class="statusDot on" style="background:${data.state === 'Focused' ? '#00C851' : '#ff4444'}"></span> ${data.state}`;
+            }
+
+        } else {
+            if (authStatus) authStatus.innerHTML = `<span class="statusDot"></span> Searching for face...`;
         }
     } catch (e) {
         // console.log("CV Error:", e);
-    }
-
-    if (authStatus && authStatus.innerText === "Scanning...") {
-        setTimeout(() => authStatus.innerText = "Authorized: User", 3000);
     }
 }
 
@@ -492,6 +503,7 @@ document.addEventListener("click", (e) => {
 
 // Initialize
 renderShortcuts();
+showStartupReminders();
 
 
 // ------------------- WALLPAPER CUSTOMIZATION -------------------

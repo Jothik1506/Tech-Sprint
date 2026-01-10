@@ -11,8 +11,6 @@ from pydantic import BaseModel
 from typing import Optional
 import os
 from dotenv import load_dotenv
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
 
 load_dotenv()
 
@@ -44,9 +42,8 @@ WEATHER_DATA = {
 
 DEFAULT_APPS = [
     {"name": "YouTube", "url": "https://youtube.com", "icon": "https://www.google.com/s2/favicons?domain=youtube.com&sz=64"},
-    {"name": "Gmail", "url": "https://mail.google.com", "icon": "https://www.google.com/s2/favicons?domain=gmail.com&sz=64"},
-    {"name": "Maps", "url": "https://maps.google.com", "icon": "https://www.google.com/s2/favicons?domain=google.com&sz=64"},
-    {"name": "Twitter", "url": "https://twitter.com", "icon": "https://www.google.com/s2/favicons?domain=x.com&sz=64"},
+    {"name": "Co-pilot", "url": "https://copilot.microsoft.com", "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Microsoft_365_Copilot_Icon.svg/64px-Microsoft_365_Copilot_Icon.svg.png"},
+    {"name": "X", "url": "https://twitter.com", "icon": "https://www.google.com/s2/favicons?domain=x.com&sz=64"},
     {"name": "LinkedIn", "url": "https://linkedin.com", "icon": "https://www.google.com/s2/favicons?domain=linkedin.com&sz=64"},
     {"name": "GitHub", "url": "https://github.com", "icon": "https://www.google.com/s2/favicons?domain=github.com&sz=64"},
 ]
@@ -65,36 +62,73 @@ model = YOLO('yolov8n-pose.pt')
 squat_count = 0
 current_stage = None
 
-# --- MediaPipe Setup ---
-# Using MediaPipe Tasks API for face detection
+# Using MediaPipe Tasks API for face detection and mesh
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-# For face detection, we'll use a simpler approach with OpenCV's Haar Cascade
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+# Initialize MediaPipe Face Landmarker (Tasks API)
+# Ensure face_landmarker.task is in the backend folder
+model_path = os.path.join(os.path.dirname(__file__), 'face_landmarker.task')
+
+base_options = python.BaseOptions(model_asset_path=model_path)
+options = vision.FaceLandmarkerOptions(base_options=base_options,
+                                       output_face_blendshapes=True,
+                                       output_facial_transformation_matrixes=True,
+                                       num_faces=1)
+detector = vision.FaceLandmarker.create_from_options(options)
+
+
+# --- EAR / MAR / Stress Helpers ---
+def calculate_distance(p1, p2):
+    return np.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+
+def calculate_ear(landmarks, eye_indices):
+    # Euclidean distance between vertical eye landmarks
+    A = calculate_distance(landmarks[eye_indices[1]], landmarks[eye_indices[5]])
+    B = calculate_distance(landmarks[eye_indices[2]], landmarks[eye_indices[4]])
+    # Euclidean distance between horizontal eye landmarks
+    C = calculate_distance(landmarks[eye_indices[0]], landmarks[eye_indices[3]])
+    if C == 0: return 0
+    ear = (A + B) / (2.0 * C)
+    return ear
+
+def calculate_mar(landmarks, mouth_indices):
+    # Vertical distance
+    A = calculate_distance(landmarks[mouth_indices[1]], landmarks[mouth_indices[7]]) # Upper lip to lower lip (inner)
+    B = calculate_distance(landmarks[mouth_indices[2]], landmarks[mouth_indices[6]]) # Upper lip to lower lip (outer or slightly side)
+    C = calculate_distance(landmarks[mouth_indices[3]], landmarks[mouth_indices[5]]) # Another vertical pair
+    # Horizontal distance
+    D = calculate_distance(landmarks[mouth_indices[0]], landmarks[mouth_indices[4]]) # Corner to corner
+    if D == 0: return 0
+    mar = (A + B + C) / (2.0 * D) # Simple MAR
+    return mar
+
+# Indices for Right Eye (MediaPipe 468 landmarks)
+# 33, 160, 158, 133, 153, 144
+RIGHT_EYE = [33, 160, 158, 133, 153, 144]
+# Indices for Left Eye
+# 362, 385, 387, 263, 373, 380
+LEFT_EYE = [362, 385, 387, 263, 373, 380]
+# Indices for Mouth (Outer lips for MAR usually, or inner)
+# Using roughly: 61 (left corner), 291 (right corner), and top/bottom points
+# Let's use simpler 6 points for MAR: [61, 81, 13, 312, 291, 317, 14, 178]...
+# Standard MAR points: 
+# P1: 61 (Left Corner), P2: 81 (Upper), P3: 13 (Upper Center), P4: 312 (Upper), P5: 291 (Right Corner)... 
+# Let's keep it simple: 
+# Horizontal: 61, 291. Vertical: 13, 14 (inner) or 0, 17 for outer.
+# Let's use: Left(61), UpperInner(13), LowerInner(14), Right(291)
+MOUTH = [61, 291, 13, 14] # Left, Right, Top, Bottom
+
+
 
 # --- Spotify Setup ---
-SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
-SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
-
-sp = None
-if SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET:
-    try:
-        sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
-            client_id=SPOTIPY_CLIENT_ID,
-            client_secret=SPOTIPY_CLIENT_SECRET
-        ))
-        print("Spotify Integration: Active")
-    except Exception as e:
-        print(f"Spotify Init Error: {e}")
-else:
-    print("Spotify Integration: Missing Credentials (using mock/public fallback)")
+# Removed
 
 # --- Endpoints ---
 
 @app.get("/api/status")
 def health_check():
-    return {"status": "running", "backend": "FastAPI/YOLOv8"}
+    return {"status": "running", "backend": "FastAPI/YOLOv8/MediaPipe"}
 
 @app.get("/api/weather")
 def get_weather():
@@ -148,16 +182,19 @@ def face_auth(req: ImageRequest = Body(...)):
         nparr = np.frombuffer(base64.b64decode(encoded), np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
-        # Convert to grayscale for face detection
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # Convert to RGB for MediaPipe
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         
-        # Detect faces
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        # Create MP Image
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
+        
+        # Detect
+        detection_result = detector.detect(mp_image)
         
         authorized = False
         message = "Scanning..."
         
-        if len(faces) > 0:
+        if len(detection_result.face_landmarks) > 0:
             authorized = True
             message = "Authorized: User"
             
@@ -166,6 +203,92 @@ def face_auth(req: ImageRequest = Body(...)):
     except Exception as e:
         print(f"Face Auth Error: {e}")
         return {"authorized": False, "message": "Error"}
+
+@app.post("/api/analyze_face")
+def analyze_face(req: ImageRequest = Body(...)):
+    try:
+        # Decode
+        if "," in req.image:
+             header, encoded = req.image.split(",", 1)
+        else:
+             encoded = req.image
+             
+        nparr = np.frombuffer(base64.b64decode(encoded), np.uint8)
+        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        # Convert to RGB for MediaPipe
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        
+        # Create MP Image
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
+        
+        # Process
+        results = detector.detect(mp_image)
+        
+        state = "Focused"
+        details = "Normal baseline"
+        
+        if len(results.face_landmarks) > 0:
+            landmarks = results.face_landmarks[0]
+            
+            # EAR
+            ear_right = calculate_ear(landmarks, RIGHT_EYE)
+            ear_left = calculate_ear(landmarks, LEFT_EYE)
+            avg_ear = (ear_right + ear_left) / 2.0
+            
+            # MAR (Simple: height / width)
+            mouth_w = calculate_distance(landmarks[MOUTH[0]], landmarks[MOUTH[1]]) # 61 to 291
+            mouth_h = calculate_distance(landmarks[MOUTH[2]], landmarks[MOUTH[3]]) # 13 to 14
+            mar = 0
+            if mouth_w > 0:
+                mar = mouth_h / mouth_w
+                
+            # Stress Heuristics
+            # Brows: 107 (Left Brow Outer), 66 (Left Brow Inner), 296 (Right Brow Inner), 336 (Right Brow Outer)
+            brow_inner_dist = calculate_distance(landmarks[66], landmarks[296])
+            # Normalize by face width (454 to 234)
+            face_width = calculate_distance(landmarks[234], landmarks[454])
+            if face_width > 0:
+                norm_brow_dist = brow_inner_dist / face_width
+            else:
+                norm_brow_dist = 0.5 # default
+                
+            
+            # Thresholds (Tunable)
+            EAR_THRESHOLD = 0.22 # Below this = Drowsy
+            MAR_THRESHOLD = 0.6  # Above this = Yawning
+            
+            if mar > MAR_THRESHOLD:
+                state = "Yawning"
+                details = "Fatigue detected (Yawning)"
+            elif avg_ear < EAR_THRESHOLD:
+                state = "Drowsy"
+                details = "Fatigue detected (Drowsy)"
+            elif norm_brow_dist < 0.23: # Experimental low brow distance
+                 # state = "Stressed" 
+                 # details = "Signs of tension detected"
+                 pass
+            else:
+                state = "Focused"
+                details = "User appears alert"
+                
+            return {
+                "detected": True,
+                "state": state,
+                "details": details,
+                "metrics": {
+                    "ear": float(avg_ear),
+                    "mar": float(mar),
+                    "brow": float(norm_brow_dist)
+                }
+            }
+                
+        return {"detected": False, "state": "No Face", "details": "No face detected"}
+        
+    except Exception as e:
+        print(f"Face Analysis Error: {e}")
+        return {"detected": False, "state": "Error", "details": str(e)}
+
 
 @app.post("/api/exercise")
 def process_exercise(req: ImageRequest = Body(...)):
@@ -213,42 +336,6 @@ def log_history(req: ResolveRequest):
     print(f"Visited: {req.query}")
     return {"status": "logged"}
 
-@app.get("/api/spotify/search")
-def search_spotify(q: str):
-    if not q:
-        return {"tracks": []}
-    
-    if sp:
-        try:
-            results = sp.search(q=q, limit=5, type='track')
-            tracks = []
-            for item in results['tracks']['items']:
-                tracks.append({
-                    "id": item['id'],
-                    "name": item['name'],
-                    "artist": item['artists'][0]['name'],
-                    "album": item['album']['name'],
-                    "image": item['album']['images'][0]['url'] if item['album']['images'] else None,
-                    "uri": item['uri']
-                })
-            return {"tracks": tracks}
-        except Exception as e:
-            return {"error": str(e), "tracks": []}
-    else:
-        # Mock results if no credentials provided
-        return {
-            "tracks": [
-                {
-                    "id": "4cOdK2wGqyR7yv9P9nc0Yq", # "Never Gonna Give You Up" - Valid ID for embed
-                    "name": f"Search Result: {q}",
-                    "artist": "Rick Astley",
-                    "album": "Whenever You Need Somebody",
-                    "image": "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
-                    "uri": "spotify:track:4cOdK2wGqyR7yv9P9nc0Yq"
-                }
-            ],
-            "note": "Missing Spotify Credentials. Using mock fallback. Add SPOTIPY_CLIENT_ID to .env"
-        }
 
 @app.post("/api/chat")
 def chat_with_ai(req: ResolveRequest):

@@ -6,3 +6,8 @@ out/
 .DS_Store
 *.log
 .idea/
+
+# Python
+__pycache__/
+*.py[cod]
+backend/face_landmarker.task

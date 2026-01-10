@@ -20,96 +20,7 @@
 
 
 
-        <!-- LEFT PANEL: Reminders & Spotify -->
-        <div class="leftPanel">
-            <!-- Wellness Reminders -->
-            <div id="wellnessCard" class="card wellnessReminders errorState">
-                <div class="cardHeader">
-                    <span>💪 Wellness Reminders</span>
-                </div>
 
-                <!-- Success Content (Hidden by default) -->
-                <div id="remindersSuccessContent" class="remindersContent hidden">
-                    <div class="reminderItem">
-                        <span class="reminderIcon">💧</span>
-                        <div class="reminderText">
-                            <strong>Stay Hydrated</strong>
-                            <p>Water break time!</p>
-                        </div>
-                    </div>
-                    <div class="reminderItem">
-                        <span class="reminderIcon">🧘</span>
-                        <div class="reminderText">
-                            <strong>Posture</strong>
-                            <p>Correct your sitting position.</p>
-                        </div>
-                    </div>
-                    <div class="reminderItem">
-                        <span class="reminderIcon">👀</span>
-                        <div class="reminderText">
-                            <strong>Eye Care</strong>
-                            <p>Look at something 20ft away.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Error Content -->
-                <div id="remindersErrorContent" class="errorContent">
-                    <div class="warningBanner">
-                        ⚠ Backend Connection Failed
-                    </div>
-                    <p class="errorMsg">Cannot reach backend server.<br>Is it running?</p>
-                    <div class="fixSteps">
-                        <strong>To fix:</strong>
-                        <ol>
-                            <li>Open terminal</li>
-                            <li>cd backend</li>
-                            <li>python server.py</li>
-                            <li>Wait for "Server starting..."</li>
-                            <li>Refresh this page</li>
-                        </ol>
-                    </div>
-                    <div class="retryMsg">
-                        ⚠ Cannot connect to backend server
-                    </div>
-                    <div class="smallHint">
-                        Please ensure backend is running on http://localhost:5000
-                        <br><br>
-                        Or run: start_backend.bat
-                    </div>
-                </div>
-            </div>
-
-            <div id="spotifyHubCard" class="card spotifyHub">
-                <div class="musicHeader">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
-                        alt="Spotify" width="20">
-                    <span>Spotify Hub</span>
-                </div>
-                <div class="spotifySearchBox">
-                    <input type="text" id="spotifySearchInput" placeholder="Search track/artist..." />
-                    <button id="spotifySearchBtn">🔍</button>
-                    <!-- Small green indicator to match screenshot -->
-                    <div class="statusDot"></div>
-                </div>
-                <div id="spotifyResults" class="spotifyResults hidden"></div>
-                <div class="spotifyPlayerContainer">
-                    <!-- Error state in player as shown in screenshot -->
-                    <div id="spotifyErrorPlaceholder" class="hidden">
-                        <div class="spotifyErrorMsg">
-                            We can't seem to find the page you are looking for.
-                        </div>
-                        <button class="spotifyHomeBtn">Home</button>
-                    </div>
-
-                    <iframe id="spotifyPlayer"
-                        src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM3M?utm_source=generator&theme=0"
-                        width="100%" height="80" frameBorder="0" allowfullscreen=""
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        loading="lazy"></iframe>
-                </div>
-            </div>
-        </div>
 
         <!-- CENTER PANEL: Search & Apps -->
         <div class="centerPanel">
@@ -191,6 +102,11 @@
     <!-- WEBVIEW WRAPPER (Hidden by default) -->
     <div id="webWrap" class="webWrap hidden">
         <webview id="webview" class="webview" src="about:blank" allowpopups></webview>
+    </div>
+
+    <!-- BOTTOM REMINDER CONTAINER -->
+    <div id="reminderContainer" class="reminderContainer hidden">
+        <!-- Reminders will be injected here via JS -->
     </div>
 
     <!-- GLOBAL BOTTOM BROWSER BAR -->

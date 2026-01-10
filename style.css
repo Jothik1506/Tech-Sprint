@@ -67,7 +67,7 @@ html {
   position: relative;
   z-index: 10;
   display: grid;
-  grid-template-columns: 250px 1fr 350px;
+  grid-template-columns: 1fr 350px;
   grid-template-rows: 100%;
   height: 100vh;
   padding: 15px;
@@ -106,7 +106,8 @@ html {
 .wellnessReminders {
   background: rgba(30, 20, 30, 0.6);
   border: 1px solid rgba(255, 100, 100, 0.2);
-  min-height: 180px; /* Reduced for rectangular look */
+  min-height: 180px;
+  /* Reduced for rectangular look */
   transition: all 0.3s ease;
 }
 
@@ -204,10 +205,12 @@ html {
 
 /* SPOTIFY HUB BEAUTIFICATION */
 .spotifyHub {
-  padding: 15px !important; /* Reduced padding */
+  padding: 15px !important;
+  /* Reduced padding */
   background: rgba(24, 24, 24, 0.7) !important;
   border: 1px solid rgba(30, 215, 96, 0.3) !important;
-  min-height: 180px; /* Force rectangular look */
+  min-height: 180px;
+  /* Force rectangular look */
 }
 
 .musicHeader {
@@ -869,6 +872,74 @@ html {
   letter-spacing: 1px;
   margin-top: 5px;
   font-weight: 600;
+}
+
+
+/* --- Bottom Reminder Container --- */
+.reminderContainer {
+  position: fixed;
+  bottom: 80px;
+  /* Above the browser bar */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  z-index: 999;
+  pointer-events: none;
+  /* Let clicks pass through if not on a card */
+}
+
+.reminderContainer.hidden {
+  display: none;
+}
+
+.bottomReminderCard {
+  background: rgba(30, 30, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+  animation: slideUpFade 0.5s ease-out forwards;
+  min-width: 200px;
+  transition: all 0.5s ease;
+}
+
+.bottomReminderCard .icon {
+  font-size: 24px;
+}
+
+.bottomReminderCard .text {
+  display: flex;
+  flex-direction: column;
+}
+
+.bottomReminderCard strong {
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.bottomReminderCard p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  margin: 0;
+}
+
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 
