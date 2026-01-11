@@ -16,7 +16,7 @@ A premium, wellness-focused browser with integrated AI assistance, facial recogn
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/SripadavenkataGanesh/wellness-hackathron-.git
+git clone https://github.com/Jothik1506/Imagine-Cup
 cd wellness-hackathron-
 ```
 
@@ -118,7 +118,7 @@ This project is open-source and available for educational purposes.
 
 | Task | Command |
 |------|---------|
-| Clone repo | `git clone https://github.com/SripadavenkataGanesh/wellness-hackathron-.git` |
+| Clone repo | `https://github.com/Jothik1506/Imagine-Cup` |
 | Install Python deps | `pip install -r requirements.txt` |
 | Start Backend | `python backend/server.py` |
 | Start Frontend | `npm start` |
