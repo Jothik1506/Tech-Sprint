@@ -21,13 +21,12 @@ const BACKEND_URL = "http://127.0.0.1:5000/api";
 
 // Default Shortcuts
 const defaultShortcuts = [
-    { name: "YouTube", url: "https://www.youtube.com", icon: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64" },
-    { name: "Co-pilot", url: "https://copilot.microsoft.com", icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Microsoft_365_Copilot_Icon.svg/64px-Microsoft_365_Copilot_Icon.svg.png" },
-    { name: "GitHub", url: "https://www.github.com", icon: "https://www.google.com/s2/favicons?domain=github.com&sz=64" },
-    { name: "ChatGPT", url: "https://chat.openai.com", icon: "https://www.google.com/s2/favicons?domain=openai.com&sz=64" },
-    { name: "X", url: "https://twitter.com", icon: "https://www.google.com/s2/favicons?domain=x.com&sz=64" },
-    { name: "WhatsApp", url: "https://web.whatsapp.com", icon: "https://www.google.com/s2/favicons?domain=whatsapp.com&sz=64" },
-    { name: "Canva", url: "https://www.canva.com", icon: "https://www.google.com/s2/favicons?domain=canva.com&sz=64" }
+    { name: "Google", url: "https://google.com", icon: "https://www.google.com/s2/favicons?domain=google.com&sz=64" },
+    { name: "Gemini", url: "https://gemini.google.com", icon: "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png" },
+    { name: "Drive", url: "https://drive.google.com", icon: "https://www.google.com/s2/favicons?domain=drive.google.com&sz=64" },
+    { name: "YouTube", url: "https://youtube.com", icon: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64" },
+    { name: "Maps", url: "https://maps.google.com", icon: "https://www.google.com/s2/favicons?domain=maps.google.com&sz=64" },
+    { name: "Photos", url: "https://photos.google.com", icon: "https://www.google.com/s2/favicons?domain=photos.google.com&sz=64" }
 ];
 
 function renderShortcuts() {
@@ -560,5 +559,3 @@ wallpaperUpload.onchange = (e) => {
         reader.readAsDataURL(file);
     }
 };
-
-

@@ -41,11 +41,12 @@ WEATHER_DATA = {
 }
 
 DEFAULT_APPS = [
+    {"name": "Google", "url": "https://google.com", "icon": "https://www.google.com/s2/favicons?domain=google.com&sz=64"},
+    {"name": "Gemini", "url": "https://gemini.google.com", "icon": "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png"},
+    {"name": "Drive", "url": "https://drive.google.com", "icon": "https://www.google.com/s2/favicons?domain=drive.google.com&sz=64"},
     {"name": "YouTube", "url": "https://youtube.com", "icon": "https://www.google.com/s2/favicons?domain=youtube.com&sz=64"},
-    {"name": "Co-pilot", "url": "https://copilot.microsoft.com", "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Microsoft_365_Copilot_Icon.svg/64px-Microsoft_365_Copilot_Icon.svg.png"},
-    {"name": "X", "url": "https://twitter.com", "icon": "https://www.google.com/s2/favicons?domain=x.com&sz=64"},
-    {"name": "LinkedIn", "url": "https://linkedin.com", "icon": "https://www.google.com/s2/favicons?domain=linkedin.com&sz=64"},
-    {"name": "GitHub", "url": "https://github.com", "icon": "https://www.google.com/s2/favicons?domain=github.com&sz=64"},
+    {"name": "Maps", "url": "https://maps.google.com", "icon": "https://www.google.com/s2/favicons?domain=maps.google.com&sz=64"},
+    {"name": "Photos", "url": "https://photos.google.com", "icon": "https://www.google.com/s2/favicons?domain=photos.google.com&sz=64"},
 ]
 
 NEWS_DATA = [
