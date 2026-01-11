@@ -150,6 +150,14 @@ searchInput.onkeydown = (e) => {
     }
 }
 
+// Gemini AI Button
+const geminiSearchBtn = document.getElementById("geminiSearchBtn");
+if (geminiSearchBtn) {
+    geminiSearchBtn.onclick = () => {
+        navigate("https://gemini.google.com");
+    };
+}
+
 // Top URL Bar
 urlBar.onkeydown = (e) => {
     if (e.key === "Enter") {
@@ -229,6 +237,70 @@ async function fetchData() {
     } catch (e) {
         console.error("Backend error", e);
     }
+}
+
+// ------------------- Volume Monitor -------------------
+let lastVolumeNotificationTime = 0;
+let isVolumeCurrentlyHigh = false; // Track state for instant notification
+const VOLUME_NOTIFICATION_INTERVAL = 2 * 60 * 1000; // Reduced to 2 minutes
+
+async function checkVolumeStatus() {
+    // Broadening check: If we are in the app, we check volume.
+    try {
+        const res = await fetch(`${BACKEND_URL}/health/volume`);
+        const data = await res.json();
+        console.log("Volume Check:", data); // Debug log
+
+        if (data.status === "success") {
+            if (data.is_high) {
+                const now = Date.now();
+                // Notify if it's the first time it goes high, OR if 15 mins have passed
+                if (!isVolumeCurrentlyHigh || (now - lastVolumeNotificationTime > VOLUME_NOTIFICATION_INTERVAL)) {
+                    showVolumeWarning(data.volume);
+                    lastVolumeNotificationTime = now;
+                }
+                isVolumeCurrentlyHigh = true;
+            } else {
+                // Volume is low, reset state so it can notify "instantly" next time it goes high
+                isVolumeCurrentlyHigh = false;
+            }
+        }
+    } catch (e) {
+    }
+}
+
+function showVolumeWarning(volume) {
+    const container = document.getElementById("reminderContainer");
+    if (!container) return;
+
+    container.classList.remove("hidden");
+
+    const card = document.createElement("div");
+    card.className = "bottomReminderCard volume-alert";
+    card.style.borderLeft = "4px solid #ff4444"; // Striking red accent
+    card.style.background = "rgba(40, 20, 20, 0.95)"; // Darker reddish tint
+
+    card.innerHTML = `
+        <div class="icon">📢</div>
+        <div class="text">
+            <strong style="color:#ff6666">High Volume Warning</strong>
+            <p>System volume is at ${volume}%. Please reduce it to protect your ears.</p>
+        </div>
+    `;
+
+    container.appendChild(card);
+
+    // Animate in
+    setTimeout(() => card.classList.add("show"), 100);
+
+    // Remove after 10 seconds
+    setTimeout(() => {
+        card.classList.remove("show");
+        setTimeout(() => {
+            card.remove();
+            if (container.children.length === 0) container.classList.add("hidden");
+        }, 500);
+    }, 10000);
 }
 
 // ------------------- Startup Reminders -------------------
@@ -503,6 +575,10 @@ document.addEventListener("click", (e) => {
 // Initialize
 renderShortcuts();
 showStartupReminders();
+fetchData();
+setInterval(fetchData, 5000); // Keep checking backend status every 5 seconds
+setInterval(checkVolumeStatus, 5000); // Check volume every 5 seconds for maximum responsiveness
+setTimeout(checkVolumeStatus, 2000); // Initial check after startup
 
 
 // ------------------- WALLPAPER CUSTOMIZATION -------------------
