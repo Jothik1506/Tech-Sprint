@@ -14,7 +14,11 @@ from dotenv import load_dotenv
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from comtypes import CLSCTX_ALL
 
-load_dotenv()
+# Load .env from parent directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+dotenv_path = os.path.join(parent_dir, '.env')
+load_dotenv(dotenv_path)
 
 app = FastAPI()
 
@@ -385,39 +389,44 @@ def chat_with_ai(req: ResolveRequest):
     """
     message = req.query.strip().lower()
     
-    # Simple keyword-based responses (can be replaced with actual AI API)
-    responses = {
-        "hello": "Hello! I'm your AI wellness assistant. How can I help you today?",
-        "hi": "Hi there! Ready to support your wellness journey. What can I do for you?",
-        "help": "I can help you with:\n• Wellness and fitness tips\n• Exercise tracking guidance\n• General browsing assistance\n• Health recommendations\n\nWhat would you like to know?",
-        "exercise": "Great choice! Regular exercise is key to wellness. I can track your squats using the camera feature. Try doing some squats and I'll count them for you!",
-        "fitness": "Fitness is a journey, not a destination! I recommend:\n• 30 minutes of daily activity\n• Mix cardio and strength training\n• Stay hydrated\n• Get enough rest\n\nWhat specific fitness goals do you have?",
-        "wellness": "Wellness encompasses physical, mental, and emotional health. Key tips:\n• Regular exercise\n• Balanced nutrition\n• Quality sleep (7-9 hours)\n• Stress management\n• Social connections\n\nWhich area would you like to focus on?",
-        "health": "Your health is your wealth! I can help you:\n• Track your exercise\n• Provide wellness tips\n• Monitor your movement\n• Suggest healthy habits\n\nWhat health topic interests you?",
-        "music": "Music is great for wellness! Use the Spotify Hub on the left to search for your favorite tracks. Music can boost mood, reduce stress, and enhance workouts!",
-        "spotify": "You can search for music using the Spotify Hub in the sidebar. Just type a song or artist name and click search!",
-        "squat": "Squats are excellent for building lower body strength! Stand in front of the camera and I'll count your squats automatically. Keep your back straight and knees aligned!",
-        "thank": "You're welcome! I'm always here to help with your wellness journey. 😊",
-        "thanks": "My pleasure! Feel free to ask me anything anytime. 🤖",
-        "bye": "Goodbye! Stay healthy and keep moving! 👋",
-    }
+    try:
+        # Initialize OpenAI
+        from openai import OpenAI
+        api_key = os.getenv("OPENAI_API_KEY")
+        
+        if not api_key:
+             return {"response": "Error: OPENAI_API_KEY not found in .env file.", "status": "error"}
+             
+        client = OpenAI(api_key=api_key)
+        
+        # System Prompt
+        system_prompt = """You are an AI Wellness Assistant integrated into a browser. 
+        Your goal is to help users with:
+        - Wellness and fitness tips (especially squats and posture)
+        - Reducing screen time and eye strain
+        - Mental health advice (stress, anxiety)
+        - General productivity
+        
+        Be concise, friendly, and motivating. Use best practices for health advice."""
+        
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": message}
+            ]
+        )
+        
+        response = completion.choices[0].message.content
+        print(f"DEBUG: OpenAI Response: {response}")
+        
+    except Exception as e:
+        print(f"DEBUG: OpenAI Error: {e}")
+        response = f"Error: {str(e)}"
     
-    # Check for keywords in message
-    response = None
-    for keyword, reply in responses.items():
-        if keyword in message:
-            response = reply
-            break
-    
-    # Default response if no keyword matched
-    if not response:
-        if "?" in message:
-            response = "That's a great question! As your AI wellness assistant, I'm here to help with fitness, health tips, and browsing. Could you tell me more about what you're looking for?"
-        else:
-            response = "I'm here to support your wellness journey! I can help with exercise tracking, health tips, and general assistance. What would you like to know?"
-    
+    print(f"DEBUG: Returning: {response}")
     return {"response": response, "status": "success"}
 
 if __name__ == '__main__':
     # Run with uvicorn
-    uvicorn.run(app, host='0.0.0.0', port=5000)
+    uvicorn.run(app, host='0.0.0.0', port=5001)

@@ -17,7 +17,7 @@ const faceScanStatus = document.querySelector(".faceScanStatus"); // Add selecto
 // const detectionBox = document.querySelector(".detectionBox");
 
 // State
-const BACKEND_URL = "http://127.0.0.1:5000/api";
+const BACKEND_URL = "http://127.0.0.1:5001/api";
 
 // Default Shortcuts
 const defaultShortcuts = [
@@ -519,7 +519,7 @@ async function sendMessage() {
         const response = await fetch(`${BACKEND_URL}/chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ query: message })
         });
 
         const data = await response.json();
