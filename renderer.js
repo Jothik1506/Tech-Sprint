@@ -138,7 +138,43 @@ document.getElementById("reloadBtn").onclick = () => { webview.reload(); };
 document.getElementById("homeBtn").onclick = showHome;
 
 // Extra Buttons (Placeholders)
-document.getElementById("cameraBtn").onclick = () => alert("Camera clicked");
+// Extra Buttons (Placeholders)
+const { ipcRenderer } = require('electron');
+
+document.getElementById("cameraBtn").onclick = () => {
+    logStatus("Capturing screenshot...");
+
+    // Visual flash effect
+    const flash = document.createElement("div");
+    flash.style.position = "fixed";
+    flash.style.top = "0";
+    flash.style.left = "0";
+    flash.style.width = "100vw";
+    flash.style.height = "100vh";
+    flash.style.backgroundColor = "white";
+    flash.style.zIndex = "10000";
+    flash.style.opacity = "0.7";
+    flash.style.pointerEvents = "none";
+    document.body.appendChild(flash);
+
+    setTimeout(() => {
+        flash.style.transition = "opacity 0.4s ease-out";
+        flash.style.opacity = "0";
+        setTimeout(() => flash.remove(), 400);
+    }, 50);
+
+    ipcRenderer.send('capture-screen');
+};
+
+ipcRenderer.on('screenshot-done', (event, response) => {
+    if (response.success) {
+        logStatus("Screenshot saved!");
+        alert(`Screenshot captured and saved to: ${response.path}`);
+    } else {
+        logStatus("Screenshot failed: " + response.error);
+        alert("Failed to capture screenshot: " + response.error);
+    }
+});
 document.getElementById("downloadBtn").onclick = () => alert("Downloads clicked");
 document.getElementById("layersBtn").onclick = () => alert("Extensions clicked");
 document.getElementById("menuBtn").onclick = () => alert("Menu clicked");

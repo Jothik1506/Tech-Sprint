@@ -580,6 +580,13 @@ html {
   /* Reload icon usually looks better slightly smaller than arrows */
 }
 
+.tool-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+
 .navControls button:hover,
 .extraTools button:hover {
   background: rgba(255, 255, 255, 0.1);

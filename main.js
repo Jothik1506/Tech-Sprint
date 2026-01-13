@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const fs = require("fs");
 const path = require("path");
 const { spawn } = require("child_process");
 
@@ -34,6 +35,27 @@ function createWindow() {
     });
 
     win.loadFile("index.html");
+
+    // Screenshot Capture Listener
+    ipcMain.on('capture-screen', async (event) => {
+        try {
+            const image = await win.capturePage();
+            const filePath = path.join(app.getPath('downloads'), `wellness-screenshot-${Date.now()}.png`);
+
+            fs.writeFile(filePath, image.toPNG(), (err) => {
+                if (err) {
+                    console.error("Save failed:", err);
+                    event.reply('screenshot-done', { success: false, error: err.message });
+                } else {
+                    console.log("Screenshot saved to:", filePath);
+                    event.reply('screenshot-done', { success: true, path: filePath });
+                }
+            });
+        } catch (e) {
+            console.error("Capture failed:", e);
+            event.reply('screenshot-done', { success: false, error: e.message });
+        }
+    });
 }
 
 app.whenReady().then(createWindow);
