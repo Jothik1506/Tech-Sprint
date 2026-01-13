@@ -29,20 +29,71 @@ const defaultShortcuts = [
     { name: "Photos", url: "https://photos.google.com", icon: "https://www.google.com/s2/favicons?domain=photos.google.com&sz=64" }
 ];
 
+// Shortcuts Logic
+let customShortcuts = [];
+try {
+    const saved = localStorage.getItem("customShortcuts");
+    if (saved) customShortcuts = JSON.parse(saved);
+    if (!Array.isArray(customShortcuts)) customShortcuts = [];
+} catch (e) {
+    console.error("Error loading shortcuts:", e);
+    customShortcuts = [];
+}
+
 function renderShortcuts() {
+    if (!quickAppsContainer) return;
     quickAppsContainer.innerHTML = "";
-    defaultShortcuts.forEach(app => {
+
+    // Combine defaults and customs
+    const allShortcuts = [...defaultShortcuts, ...customShortcuts];
+
+    allShortcuts.forEach(app => {
         const appBtn = document.createElement("div");
         appBtn.className = "appCircle";
         appBtn.title = app.name;
-        appBtn.style.backgroundImage = `url('${app.icon}')`;
-        appBtn.style.backgroundSize = "60%"; // Pro-look sizing
-        appBtn.style.backgroundRepeat = "no-repeat";
-        appBtn.style.backgroundPosition = "center";
+
+        const iconContainer = document.createElement("div");
+        iconContainer.className = "iconContainer";
+
+        const icon = document.createElement("img");
+        // Use Google's favicon service for a reliable icon
+        icon.src = `https://www.google.com/s2/favicons?domain=${app.url}&sz=64`;
+        icon.onerror = () => { icon.src = app.icon; }; // Fallback
+
+        iconContainer.appendChild(icon);
+        appBtn.appendChild(iconContainer);
+
+        const label = document.createElement("div");
+        label.className = "shortcutLabel";
+        label.innerText = app.name;
+        appBtn.appendChild(label);
 
         appBtn.onclick = () => navigate(app.url);
         quickAppsContainer.appendChild(appBtn);
     });
+
+    // Add "Add Shortcut" button
+    const addBtn = document.createElement("div");
+    addBtn.className = "appCircle addShortcutBtn";
+    addBtn.title = "Add shortcut";
+
+    const addIconContainer = document.createElement("div");
+    addIconContainer.className = "iconContainer";
+    addIconContainer.innerHTML = "<span>+</span>";
+
+    addBtn.appendChild(addIconContainer);
+
+    const addLabel = document.createElement("div");
+    addLabel.className = "shortcutLabel";
+    addLabel.innerText = "Add shortcut";
+    addBtn.appendChild(addLabel);
+
+    addBtn.onclick = (e) => {
+        e.preventDefault();
+        console.log("Add Shortcut Clicked");
+        showShortcutModal();
+    };
+    quickAppsContainer.appendChild(addBtn);
 }
 
 // ------------------- Navigation -------------------
@@ -201,6 +252,56 @@ urlBar.onkeydown = (e) => {
     }
 }
 
+// ------------------- Shortcut Modal Logic -------------------
+const shortcutModal = document.getElementById("shortcutModal");
+const shortcutNameInput = document.getElementById("shortcutNameInput");
+const shortcutUrlInput = document.getElementById("shortcutUrlInput");
+const saveShortcutBtn = document.getElementById("saveShortcutBtn");
+const cancelShortcutBtn = document.getElementById("cancelShortcutBtn");
+
+function showShortcutModal() {
+    shortcutModal.classList.remove("hidden");
+    shortcutNameInput.value = "";
+    shortcutUrlInput.value = "";
+    shortcutNameInput.focus();
+}
+
+function hideShortcutModal() {
+    shortcutModal.classList.add("hidden");
+}
+
+cancelShortcutBtn.onclick = hideShortcutModal;
+
+saveShortcutBtn.onclick = () => {
+    const name = shortcutNameInput.value.trim();
+    let url = shortcutUrlInput.value.trim();
+
+    if (!name || !url) {
+        alert("Please provide both a name and a URL.");
+        return;
+    }
+
+    // Basic URL cleaning
+    if (!url.startsWith("http")) {
+        url = "https://" + url;
+    }
+
+    customShortcuts.push({
+        name: name,
+        url: url,
+        icon: `https://www.google.com/s2/favicons?domain=${url}&sz=64`
+    });
+
+    localStorage.setItem("customShortcuts", JSON.stringify(customShortcuts));
+    renderShortcuts();
+    hideShortcutModal();
+};
+
+// Close modal when clicking outside
+shortcutModal.onclick = (e) => {
+    if (e.target === shortcutModal) hideShortcutModal();
+};
+
 // ------------------- Backend Data -------------------
 
 async function fetchData() {
@@ -239,22 +340,9 @@ async function fetchData() {
         fetch(`${BACKEND_URL}/apps`)
             .then(r => r.json())
             .then(apps => {
-                quickAppsContainer.innerHTML = "";
-                apps.forEach(app => {
-                    const div = document.createElement("div");
-                    div.className = "appCircle";
-                    if (app.icon.startsWith("http")) {
-                        div.style.backgroundImage = `url('${app.icon}')`;
-                        div.style.backgroundSize = "60%";
-                        div.style.backgroundRepeat = "no-repeat";
-                        div.style.backgroundPosition = "center";
-                    } else {
-                        div.innerHTML = `<span style="display:flex;justify-content:center;align-items:center;height:100%;font-weight:bold;color:#333">${app.icon}</span>`;
-                    }
-                    div.title = app.name;
-                    div.onclick = () => navigate(app.url);
-                    quickAppsContainer.appendChild(div);
-                });
+                // If backend provides apps, we can use them as defaults if we want,
+                // but for now let's stick to our local persistence for the "Add Shortcut" feel.
+                // renderShortcuts already handles defaults + customs.
             });
 
         // News
