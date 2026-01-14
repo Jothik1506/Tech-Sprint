@@ -16,8 +16,75 @@ const faceScanStatus = document.querySelector(".faceScanStatus"); // Add selecto
 // const exerciseStatusEl = document.getElementById("exerciseStatus");
 // const detectionBox = document.querySelector(".detectionBox");
 
-// State
 const BACKEND_URL = "http://127.0.0.1:5001/api";
+
+// ------------------- Phone Detection State -------------------
+let phoneUsageSeconds = 0;
+const phoneWarning = document.getElementById("phoneWarning");
+
+// ------------------- Absence Detection State -------------------
+let absenceSeconds = 0;
+const absenceWarning = document.getElementById("absenceWarning");
+
+// ------------------- Focus Mode Setup -------------------
+let isFocusModeActive = localStorage.getItem("focusModeActive") === "true";
+
+const BLOCKED_DOMAINS = [
+    'facebook.com', 'instagram.com', 'twitter.com', 'x.com', 'reddit.com',
+    'twitch.tv', 'roblox.com', 'netflix.com', 'disneyplus.com', 'hulu.com',
+    'steampowered.com', 'epicgames.com', 'poki.com', 'y8.com', 'friv.com'
+];
+
+const ALLOWED_EDUCATIONAL_DOMAINS = [
+    'github.com', 'youtube.com', 'wikipedia.org', 'stackoverflow.com',
+    'coursera.org', 'udemy.com', 'edx.org', 'khanacademy.org',
+    'google.com', 'microsoft.com', 'apple.com', 'mdn.com', 'w3schools.com',
+    'medium.com', 'freecodecamp.org'
+];
+
+function isUrlDistraction(url) {
+    if (!isFocusModeActive) return false;
+    const query = url.toLowerCase();
+
+    // Check blocklist first (explicit blocks)
+    if (BLOCKED_DOMAINS.some(blocked => query.includes(blocked))) return true;
+
+    // Check allowlist (explicit allows)
+    if (ALLOWED_EDUCATIONAL_DOMAINS.some(allowed => query.includes(allowed))) return false;
+
+    // For general searches or URLs not in either list
+    const educationalKeywords = ['learn', 'study', 'education', 'tutorial', 'course', 'science', 'math', 'knowledge', 'ai', 'dev', 'doc'];
+    if (educationalKeywords.some(kw => query.includes(kw))) return false;
+
+    // In search queries, if it's not explicitly blocked and doesn't look like a direct distraction URL, allow Google search
+    if (!url.startsWith('http') && !url.includes('.')) return false;
+
+    // Default: block unknown sites in strict focus mode
+    return true;
+}
+
+function updateFocusModeUI() {
+    const btn = document.getElementById("focusModeToggle");
+    if (!btn) return;
+
+    if (isFocusModeActive) {
+        btn.classList.add("active");
+        document.body.classList.add("focusModeActive");
+        logStatus("Focus Mode Enable: Learning Mode ON!");
+    } else {
+        btn.classList.remove("active");
+        document.body.classList.remove("focusModeActive");
+        logStatus("Focus Mode Disabled");
+    }
+    // Re-render shortcuts to match mode
+    renderShortcuts();
+}
+
+function toggleFocusMode() {
+    isFocusModeActive = !isFocusModeActive;
+    localStorage.setItem("focusModeActive", isFocusModeActive);
+    updateFocusModeUI();
+}
 
 // Default Shortcuts
 const defaultShortcuts = [
@@ -27,6 +94,14 @@ const defaultShortcuts = [
     { name: "YouTube", url: "https://youtube.com", icon: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64" },
     { name: "Maps", url: "https://maps.google.com", icon: "https://www.google.com/s2/favicons?domain=maps.google.com&sz=64" },
     { name: "Photos", url: "https://photos.google.com", icon: "https://www.google.com/s2/favicons?domain=photos.google.com&sz=64" }
+];
+
+const educationalShortcuts = [
+    { name: "Google", url: "https://google.com", icon: "https://www.google.com/s2/favicons?domain=google.com&sz=64" },
+    { name: "YouTube", url: "https://youtube.com", icon: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64" },
+    { name: "GitHub", url: "https://github.com", icon: "https://www.google.com/s2/favicons?domain=github.com&sz=64" },
+    { name: "Gemini", url: "https://gemini.google.com", icon: "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png" },
+    { name: "Wikipedia", url: "https://wikipedia.org", icon: "https://www.google.com/s2/favicons?domain=wikipedia.org&sz=64" }
 ];
 
 // Shortcuts Logic
@@ -45,7 +120,13 @@ function renderShortcuts() {
     quickAppsContainer.innerHTML = "";
 
     // Combine defaults and customs
-    const allShortcuts = [...defaultShortcuts, ...customShortcuts];
+    // Choose shortcuts based on Focus Mode
+    let allShortcuts;
+    if (isFocusModeActive) {
+        allShortcuts = [...educationalShortcuts];
+    } else {
+        allShortcuts = [...defaultShortcuts, ...customShortcuts];
+    }
 
     allShortcuts.forEach(app => {
         const appBtn = document.createElement("div");
@@ -72,28 +153,30 @@ function renderShortcuts() {
         quickAppsContainer.appendChild(appBtn);
     });
 
-    // Add "Add Shortcut" button
-    const addBtn = document.createElement("div");
-    addBtn.className = "appCircle addShortcutBtn";
-    addBtn.title = "Add shortcut";
+    // Add "Add Shortcut" button ONLY if NOT in Focus Mode
+    if (!isFocusModeActive) {
+        const addBtn = document.createElement("div");
+        addBtn.className = "appCircle addShortcutBtn";
+        addBtn.title = "Add shortcut";
 
-    const addIconContainer = document.createElement("div");
-    addIconContainer.className = "iconContainer";
-    addIconContainer.innerHTML = "<span>+</span>";
+        const addIconContainer = document.createElement("div");
+        addIconContainer.className = "iconContainer";
+        addIconContainer.innerHTML = "<span>+</span>";
 
-    addBtn.appendChild(addIconContainer);
+        addBtn.appendChild(addIconContainer);
 
-    const addLabel = document.createElement("div");
-    addLabel.className = "shortcutLabel";
-    addLabel.innerText = "Add shortcut";
-    addBtn.appendChild(addLabel);
+        const addLabel = document.createElement("div");
+        addLabel.className = "shortcutLabel";
+        addLabel.innerText = "Add shortcut";
+        addBtn.appendChild(addLabel);
 
-    addBtn.onclick = (e) => {
-        e.preventDefault();
-        console.log("Add Shortcut Clicked");
-        showShortcutModal();
-    };
-    quickAppsContainer.appendChild(addBtn);
+        addBtn.onclick = (e) => {
+            e.preventDefault();
+            console.log("Add Shortcut Clicked");
+            showShortcutModal();
+        };
+        quickAppsContainer.appendChild(addBtn);
+    }
 }
 
 // ------------------- Navigation -------------------
@@ -118,6 +201,14 @@ function logStatus(msg) {
 // ------------------- Navigation -------------------
 async function navigate(query) {
     if (!query) return;
+
+    // PRE-CHECK QUERY FOR FOCUS MODE
+    if (isFocusModeActive && isUrlDistraction(query)) {
+        alert("Focus Mode is ON. Distraction-related sites are blocked! 🛡️");
+        logStatus("Focus Mode Blocked: " + query);
+        return;
+    }
+
     logStatus("Navigating to: " + query);
     try {
         let url = query;
@@ -142,6 +233,12 @@ async function navigate(query) {
             }
         }
 
+        // RE-CHECK RESOLVED URL FOR FOCUS MODE
+        if (isFocusModeActive && isUrlDistraction(url)) {
+            alert("Focus Mode is ON. This specific site is restricted! 🛡️");
+            return;
+        }
+
         dashboard.classList.add("hidden");
         webWrap.classList.remove("hidden");
 
@@ -155,7 +252,29 @@ async function navigate(query) {
 }
 
 // Webview Events
+webview.addEventListener('will-navigate', (event) => {
+    if (isFocusModeActive && isUrlDistraction(event.url)) {
+        // Stop navigation immediately logic happens before loading starts
+        // We can't strictly preventDefault on will-navigate in all electrons, 
+        // but we can immediately redirect or stop.
+        // For Electron webview tag, this event is often not cancellable directly via event.preventDefault() 
+        // in rendering process comfortably depending on version, but we can do a check.
+
+        // Better approach: Check URL and if blocked, load a blocked page or stop.
+        webview.stop();
+        alert("Blocked by Focus Mode! 🛡️\n\nStay focused on your goals.");
+        // dashboard could be shown or just stay on previous page
+    }
+});
+
 webview.addEventListener('did-start-loading', () => {
+    // Double check current URL just in case
+    const currentUrl = webview.getURL();
+    if (isFocusModeActive && isUrlDistraction(currentUrl)) {
+        webview.stop();
+        webview.goBack(); // Try to go back
+        alert("Blocked by Focus Mode! 🛡️");
+    }
     logStatus("Loading...");
 });
 webview.addEventListener('did-stop-loading', () => {
@@ -542,7 +661,6 @@ async function processFrame() {
                     faceScanStatus.style.color = "#ffbb33"; // Orange warning
                 } else {
                     faceScanStatus.style.color = "#00C851"; // Green good
-                    // Reset if previously set
                     faceScanStatus.style.color = "";
                 }
             }
@@ -551,8 +669,45 @@ async function processFrame() {
                 authStatus.innerHTML = `<span class="statusDot on" style="background:${data.state === 'Focused' ? '#00C851' : '#ff4444'}"></span> ${data.state}`;
             }
 
+            // --- PHONE DETECTION LOGIC ---
+            if (data.using_phone) {
+                // Increment timer (polling every 2s, so add 2s)
+                phoneUsageSeconds += 2;
+                console.log("Phone Detected! Duration:", phoneUsageSeconds);
+
+                if (phoneUsageSeconds > 15) {
+                    if (phoneWarning) phoneWarning.classList.remove("hidden");
+                }
+            } else {
+                // Decay timer logic (Buffer against missed detections)
+                // Instead of resetting to 0, decrement by 2 (or more) to allow short blips
+                if (phoneUsageSeconds > 0) {
+                    phoneUsageSeconds -= 2;
+                    if (phoneUsageSeconds < 0) phoneUsageSeconds = 0;
+                    console.log("Phone lost... decay:", phoneUsageSeconds);
+                }
+
+                // Hide warning only if we drop well below threshold to avoid flickering warning
+                if (phoneUsageSeconds < 12) {
+                    if (phoneWarning) phoneWarning.classList.add("hidden");
+                }
+            }
+
+            // Reset absence timer if face is found
+            absenceSeconds = 0;
+            if (absenceWarning) absenceWarning.classList.add("hidden");
+
         } else {
             if (authStatus) authStatus.innerHTML = `<span class="statusDot"></span> Searching for face...`;
+            // Reset phone timer if no face (cannot be using phone if not there? or maybe just reset to be safe)
+            phoneUsageSeconds = 0;
+            if (phoneWarning) phoneWarning.classList.add("hidden");
+
+            // --- ABSENCE DETECTION LOGIC ---
+            absenceSeconds += 2; // increments by 2s (polling interval)
+            if (absenceSeconds > 9) {
+                if (absenceWarning) absenceWarning.classList.remove("hidden");
+            }
         }
     } catch (e) {
         // console.log("CV Error:", e);
@@ -715,6 +870,7 @@ const uploadWallpaperBtn = document.getElementById("uploadWallpaperBtn");
 const customizeBtn = document.getElementById("customizeBtn");
 
 function setWallpaper(src) {
+    if (isFocusModeActive) return; // Block changes if Focus Mode is active
     if (src === "default" || !src) {
         browserBackground.style.backgroundImage = "none";
         localStorage.removeItem("customWallpaper");
@@ -759,3 +915,11 @@ wallpaperUpload.onchange = (e) => {
         reader.readAsDataURL(file);
     }
 };
+
+// ------------------- Focus Mode Init -------------------
+const focusModeToggle = document.getElementById("focusModeToggle");
+if (focusModeToggle) {
+    focusModeToggle.onclick = toggleFocusMode;
+    // Initial UI update
+    updateFocusModeUI();
+}

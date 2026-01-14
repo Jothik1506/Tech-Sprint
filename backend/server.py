@@ -64,6 +64,7 @@ NEWS_DATA = [
 # --- YOLOv8 Setup ---
 from ultralytics import YOLO
 model = YOLO('yolov8n-pose.pt')
+object_model = YOLO('yolov8n.pt') # Load object detection model
 
 # Global State
 squat_count = 0
@@ -232,6 +233,19 @@ def analyze_face(req: ImageRequest = Body(...)):
         # Process
         results = detector.detect(mp_image)
         
+        # Check for Phone (Object Detection)
+        using_phone = False
+        # Lower confidence to 0.4 to catch partial phones
+        obj_results = object_model(frame, verbose=False, conf=0.4)
+        if obj_results:
+            for box in obj_results[0].boxes:
+                cls_id = int(box.cls[0])
+                # COCO Class 67 is 'cell phone'
+                if cls_id == 67:
+                    using_phone = True
+                    # print("DEBUG: Phone detected!") 
+                    break
+
         state = "Focused"
         details = "Normal baseline"
         
@@ -283,6 +297,7 @@ def analyze_face(req: ImageRequest = Body(...)):
                 "detected": True,
                 "state": state,
                 "details": details,
+                "using_phone": using_phone,  # Return phone detection status
                 "metrics": {
                     "ear": float(avg_ear),
                     "mar": float(mar),
