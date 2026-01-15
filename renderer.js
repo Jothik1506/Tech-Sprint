@@ -923,3 +923,25 @@ if (focusModeToggle) {
     // Initial UI update
     updateFocusModeUI();
 }
+
+// ------------------- HEALTH & CARE SYSTEM -------------------
+const healthCareBtn = document.getElementById("healthCareBtn");
+const healthCareModal = document.getElementById("healthCareModal");
+const closeHealthBtn = document.getElementById("closeHealthBtn");
+
+if (healthCareBtn && healthCareModal && closeHealthBtn) {
+    healthCareBtn.onclick = () => {
+        healthCareModal.classList.remove("hidden");
+    };
+
+    closeHealthBtn.onclick = () => {
+        healthCareModal.classList.add("hidden");
+    };
+
+    // Low-fi click outside to close
+    healthCareModal.onclick = (e) => {
+        if (e.target === healthCareModal) {
+            healthCareModal.classList.add("hidden");
+        }
+    };
+}

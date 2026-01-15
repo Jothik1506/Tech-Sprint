@@ -355,8 +355,178 @@ html {
 }
 
 .gemini-btn svg {
-  width: 22px;
   height: 22px;
+}
+
+/* --- HEALTH CARE SYSTEM --- */
+.healthCareTrigger {
+  position: fixed;
+  bottom: 130px;
+  /* Above AI Chat (approx 20px + 60px size + gap) */
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.healthCareTrigger:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.healthCareModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  /* Dark dim */
+  backdrop-filter: blur(8px);
+  /* Strong blur */
+  z-index: 5001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.healthCareModal.hidden {
+  display: none;
+  opacity: 0;
+}
+
+.healthModalContent {
+  background: rgba(230, 230, 230, 0.85);
+  /* Light glass similar to image */
+  width: 80%;
+  max-width: 900px;
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #333;
+  animation: modalScaleUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes modalScaleUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.closeHealthBtn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  /* Image shows X on left? Or maybe right. Standard is right, but image looks like left? Let's stick to standard or left if image implies. Actually standard is right. Let's do left to match macOS/clean style if desired, or right. Image isn't fully clear on X pos, but let's put top-left for now as it's often cleaner. */
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+}
+
+.healthHeader h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.healthHeader p {
+  font-size: 14px;
+  color: #555;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  line-height: 1.5;
+}
+
+.healthCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.healthCard {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.healthCard:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.cardIcon {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.healthCard h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.healthCard .duration {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.healthCard p {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 25px;
+  line-height: 1.4;
+  max-width: 200px;
+}
+
+.healthActionBtn {
+  background: #dcdcdc;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.healthActionBtn:hover {
+  background: #c0c0c0;
 }
 
 /* ANIMATIONS */
