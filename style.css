@@ -1297,8 +1297,11 @@ body.focusModeActive #customizeBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5000;
   /* Higher than everything else */
+}
+
+.modal.hidden {
+  display: none !important;
 }
 
 .modalContent {
