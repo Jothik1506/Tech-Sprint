@@ -18,13 +18,12 @@ let isPaused = false;
 let timeLeft = MEDITATION_DURATION;
 let timerInterval = null;
 let currentPhase = 'INIT'; // INIT, GUIDE, TIMER, DONE
+let musicPending = false; // If 10s mark hits while paused
 
-// Background Audio (Placeholder for Music)
-let backgroundAudio = null;
-// Example future usage: 
-// backgroundAudio = new Audio("assets/meditation.mp3");
-// backgroundAudio.loop = true;
-// backgroundAudio.volume = 0.5;
+// Background Audio
+let backgroundAudio = new Audio("assets/meditation_song1.wav");
+backgroundAudio.loop = true;
+// backgroundAudio.volume = 0.5; // Optional: Adjust volume if needed
 
 function startBackgroundAudio() {
     if (backgroundAudio) {
@@ -106,15 +105,22 @@ function startMeditation() {
     // Add breathing animation
     circle.classList.add('breathing');
 
-    // Start Audio
-    startBackgroundAudio();
-
     // Start Intro Logic
     speakIntro(() => {
         if (currentPhase === 'GUIDE') {
             startTimerPhase();
         }
     });
+
+    // Start music exactly 10s after start (independent of speech)
+    setTimeout(() => {
+        if (!isPaused && currentPhase !== 'DONE') {
+            startBackgroundAudio();
+        } else if (currentPhase !== 'DONE') {
+            // If paused when timer hits, mark it to play on resume
+            musicPending = true;
+        }
+    }, 10000);
 }
 
 function startTimerPhase() {
@@ -183,7 +189,13 @@ function togglePause() {
     } else {
         // Resume Everything
         if (synth.paused) synth.resume();
-        startBackgroundAudio();
+
+        // Resume audio if it was playing or if it was pending start
+        if (!backgroundAudio.paused || musicPending) {
+            startBackgroundAudio();
+            musicPending = false;
+        }
+
         circle.style.animationPlayState = 'running';
     }
 }
@@ -199,6 +211,37 @@ function quit() {
 pauseBtn.addEventListener('click', togglePause);
 skipBtn.addEventListener('click', quit);
 backBtn.addEventListener('click', quit);
+
+// Music Selection Logic
+const musicOptions = document.querySelectorAll('.musicOption');
+musicOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+        // UI Update
+        musicOptions.forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+
+        // Audio Update
+        const songId = opt.getAttribute('data-song');
+        const songPath = songId === '1' ? "assets/meditation_song1.wav" : "assets/meditation_song2.wav";
+
+        // If audio is already initialized
+        if (backgroundAudio) {
+            const wasPlaying = !backgroundAudio.paused;
+            backgroundAudio.src = songPath;
+            backgroundAudio.loop = true;
+
+            // If it was already playing (meaning we passed the 10s mark), resume immediately
+            // If it wasn't playing (before 10s mark), the timeout logic will handle start
+            if (wasPlaying) {
+                backgroundAudio.play().catch(e => console.log("Play error:", e));
+            }
+        } else {
+            // Should not happen as we init globally, but safe fallback
+            backgroundAudio = new Audio(songPath);
+            backgroundAudio.loop = true;
+        }
+    });
+});
 
 // Cleanup
 window.addEventListener('beforeunload', () => {

@@ -169,3 +169,121 @@ body {
     background: rgba(136, 204, 200, 0.1);
     border-color: #88ccc8;
 }
+
+/* Music Selector (Premium UI) */
+.musicSelector {
+    position: absolute;
+    top: 100px;
+    right: 40px;
+    /* More spacing from edge */
+    background: rgba(20, 15, 30, 0.6);
+    /* Darker, richer background */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 200px;
+    /* Wider for better touch target */
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+    transform: translateX(0);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 100;
+}
+
+.musicSelector:hover {
+    background: rgba(30, 20, 40, 0.75);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.musicSelector h3 {
+    margin: 0 0 12px 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 4px;
+}
+
+.musicOption {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.musicOption:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Active State - Premium Gradient */
+.musicOption.active {
+    background: linear-gradient(135deg, rgba(160, 108, 213, 0.85), rgba(98, 71, 170, 0.95));
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(160, 108, 213, 0.35);
+}
+
+.musicOption.active:hover {
+    transform: translateX(4px) scale(1.02);
+}
+
+.musicOption .icon {
+    font-size: 18px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: transform 0.3s;
+}
+
+.musicOption:hover .icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Active indicator dot */
+.musicOption.active::after {
+    content: '';
+    position: absolute;
+    right: 18px;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
