@@ -42,6 +42,25 @@ const ALLOWED_EDUCATIONAL_DOMAINS = [
     'medium.com', 'freecodecamp.org'
 ];
 
+// ------------------- Menu Shortcuts -------------------
+const normalModeMenuShortcuts = [
+    { name: 'Discord', url: 'https://discord.com', icon: '💬' },
+    { name: 'Reddit', url: 'https://reddit.com', icon: '🔴' },
+    { name: 'Twitch', url: 'https://twitch.tv', icon: '🎮' },
+    { name: 'GitHub', url: 'https://github.com', icon: '🐙' },
+    { name: 'YouTube', url: 'https://youtube.com', icon: '▶️' },
+    { name: 'Instagram', url: 'https://instagram.com', icon: '📷' }
+];
+
+const focusModeMenuShortcuts = [
+    { name: 'Sheets', url: 'https://sheets.google.com', icon: '📊' },
+    { name: 'Colab', url: 'https://colab.research.google.com', icon: '🔬' },
+    { name: 'Docs', url: 'https://docs.google.com', icon: '📝' },
+    { name: 'Meet', url: 'https://meet.google.com', icon: '📹' },
+    { name: 'Slides', url: 'https://slides.google.com', icon: '📽️' },
+    { name: 'Drive', url: 'https://drive.google.com', icon: '💾' }
+];
+
 function isUrlDistraction(url) {
     if (!isFocusModeActive) return false;
     const query = url.toLowerCase();
@@ -84,6 +103,11 @@ function toggleFocusMode() {
     isFocusModeActive = !isFocusModeActive;
     localStorage.setItem("focusModeActive", isFocusModeActive);
     updateFocusModeUI();
+
+    // Update menu shortcuts if panel is open
+    if (menuPanel && !menuPanel.classList.contains("hidden")) {
+        renderMenuShortcuts();
+    }
 }
 
 // Default Shortcuts
@@ -1024,4 +1048,58 @@ if (healthCareBtn && healthCareModal && closeHealthBtn) {
             healthCareModal.classList.add("hidden");
         }
     };
+}
+
+// ------------------- MENU PANEL SYSTEM -------------------
+const menuBtn = document.getElementById("menuBtn");
+const menuPanel = document.getElementById("menuPanel");
+const menuShortcutsGrid = document.getElementById("menuShortcutsGrid");
+
+function renderMenuShortcuts() {
+    if (!menuShortcutsGrid) return;
+
+    menuShortcutsGrid.innerHTML = "";
+
+    // Choose shortcuts based on Focus Mode
+    const shortcuts = isFocusModeActive ? focusModeMenuShortcuts : normalModeMenuShortcuts;
+
+    shortcuts.forEach(shortcut => {
+        const shortcutEl = document.createElement("div");
+        shortcutEl.className = "menuShortcut";
+
+        shortcutEl.innerHTML = `
+            <div class="menuShortcutIcon">${shortcut.icon}</div>
+            <div class="menuShortcutLabel">${shortcut.name}</div>
+        `;
+
+        shortcutEl.onclick = () => {
+            navigate(shortcut.url);
+            menuPanel.classList.add("hidden");
+        };
+
+        menuShortcutsGrid.appendChild(shortcutEl);
+    });
+}
+
+if (menuBtn && menuPanel) {
+    menuBtn.onclick = () => {
+        menuPanel.classList.toggle("hidden");
+        if (!menuPanel.classList.contains("hidden")) {
+            renderMenuShortcuts();
+        }
+    };
+
+    // Close when clicking outside
+    menuPanel.onclick = (e) => {
+        if (e.target === menuPanel) {
+            menuPanel.classList.add("hidden");
+        }
+    };
+
+    // Close when pressing Escape
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !menuPanel.classList.contains("hidden")) {
+            menuPanel.classList.add("hidden");
+        }
+    });
 }
