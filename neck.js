@@ -60,7 +60,7 @@ function initStep() {
     // Update dots
     progressDots.forEach((d, i) => {
         d.classList.toggle('active', i === currentStepIndex);
-        d.style.backgroundColor = (i < currentStepIndex) ? '#4db8ff' : ''; // Completed dots
+        d.style.backgroundColor = (i < currentStepIndex) ? '#7fc8a9' : ''; // Completed dots
     });
 }
 
@@ -80,7 +80,7 @@ function completeExercise() {
     // Mark all dots
     progressDots.forEach(d => {
         d.classList.add('active');
-        d.style.backgroundColor = '#00C851';
+        d.style.backgroundColor = '#7fc8a9';
     });
 }
 
@@ -133,12 +133,12 @@ function onResults(results) {
 
         // Draw Mesh
         drawConnectors(canvasCtx, landmarks, FACEMESH_TESSELATION,
-            { color: '#fafafa', lineWidth: 1 });
-        drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, { color: '#4db8ff' });
-        drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYEBROW, { color: '#4db8ff' });
-        drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYE, { color: '#4db8ff' });
-        drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYEBROW, { color: '#4db8ff' });
-        drawConnectors(canvasCtx, landmarks, FACEMESH_FACE_OVAL, { color: '#E0E0E0' });
+            { color: '#e3e8e5', lineWidth: 1 });
+        drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, { color: '#7fc8a9' });
+        drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYEBROW, { color: '#7fc8a9' });
+        drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYE, { color: '#7fc8a9' });
+        drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYEBROW, { color: '#7fc8a9' });
+        drawConnectors(canvasCtx, landmarks, FACEMESH_FACE_OVAL, { color: '#e3e8e5' });
 
         // Logic
         if (currentStepIndex < steps.length) {
@@ -162,7 +162,7 @@ function onResults(results) {
                 isCorrect = currentStep.check(ratio);
 
                 debugStatus = isCorrect ? "CORRECT" : "NOT CORRECT";
-                debugColor = isCorrect ? "#00C851" : "orange";
+                debugColor = isCorrect ? "#7fc8a9" : "orange";
 
                 // Update Timer only if correct AND not paused
                 if (isCorrect && !isPaused) {
@@ -183,7 +183,7 @@ function onResults(results) {
             }
         } else {
             debugStatus = "DONE";
-            debugColor = "#00C851";
+            debugColor = "#7fc8a9";
         }
     }
 

@@ -1,9 +1,16 @@
 /* WELLNESS BROWSER THEME */
 :root {
-  --bg-color: #241b2f;
+  --bg-color: #1f2a24;
+  /* primary background */
   --card-bg: rgba(255, 255, 255, 0.05);
-  --text-color: #ffffff;
-  --accent-color: #a06cd5;
+  /* panels, cards, inputs */
+  --text-color: #e3e8e5;
+  /* primary text */
+  --muted-text: #b7c1bc;
+  /* secondary text */
+  --accent-color: #7fc8a9;
+  /* links, highlights, active states */
+  --border-color: rgba(255, 255, 255, 0.08);
 }
 
 body,
@@ -84,10 +91,10 @@ html {
 /* CARDS COMMON */
 .card,
 .widget {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 15px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
@@ -104,7 +111,7 @@ html {
 
 /* WELLNESS REMINDERS CARD */
 .wellnessReminders {
-  background: rgba(30, 20, 30, 0.6);
+  background: var(--bg-color);
   border: 1px solid rgba(255, 100, 100, 0.2);
   min-height: 180px;
   /* Reduced for rectangular look */
@@ -134,17 +141,17 @@ html {
 .reminderText strong {
   display: block;
   font-size: 13px;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .reminderText p {
   margin: 0;
   font-size: 11px;
-  color: #aaa;
+  color: var(--muted-text);
 }
 
 .wellnessReminders .cardHeader {
-  color: #a06cd5;
+  color: #7fc8a9;
   font-weight: 600;
   margin-bottom: 15px;
   font-size: 14px;
@@ -168,7 +175,7 @@ html {
 
 .errorMsg {
   font-size: 12px;
-  color: #ddd;
+  color: var(--text-color);
   margin-bottom: 15px;
   line-height: 1.4;
   text-align: center;
@@ -179,7 +186,7 @@ html {
   padding: 10px;
   border-radius: 8px;
   font-size: 11px;
-  color: #ccc;
+  color: var(--muted-text);
   text-align: left;
 }
 
@@ -207,7 +214,7 @@ html {
 .spotifyHub {
   padding: 15px !important;
   /* Reduced padding */
-  background: rgba(24, 24, 24, 0.7) !important;
+  background: var(--bg-color);
   border: 1px solid rgba(30, 215, 96, 0.3) !important;
   min-height: 180px;
   /* Force rectangular look */
@@ -239,11 +246,11 @@ html {
 
 #spotifySearchInput {
   flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 8px 12px;
-  color: white;
+  color: var(--text-color);
   font-size: 13px;
   outline: none;
   transition: all 0.3s;
@@ -305,10 +312,10 @@ html {
   width: 80%;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   padding: 12px 25px;
   border-radius: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .g-logo {
@@ -322,7 +329,7 @@ html {
   flex: 1;
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-color);
   font-size: 16px;
   outline: none;
 }
@@ -334,7 +341,7 @@ html {
 }
 
 .gemini-btn {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   border: none;
   border-radius: 50%;
   width: 38px;
@@ -344,7 +351,7 @@ html {
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .gemini-btn:hover {
@@ -367,9 +374,9 @@ html {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   font-size: 24px;
   cursor: pointer;
   backdrop-filter: blur(10px);
@@ -546,10 +553,10 @@ html {
 }
 
 .menuPanelContent {
-  background: rgba(30, 30, 40, 0.95);
+  background: var(--bg-color);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -573,13 +580,16 @@ html {
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .menuHeader h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-color);
   letter-spacing: 0.5px;
 }
 
@@ -598,13 +608,13 @@ html {
   padding: 12px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .menuShortcut:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -618,8 +628,8 @@ html {
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
 }
 
 .menuShortcutIcon img {
@@ -715,7 +725,7 @@ html {
   backdrop-filter: blur(20px);
   padding: 10px 18px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
   cursor: pointer;
   z-index: 1000;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -731,7 +741,7 @@ html {
 .focusLabel {
   font-size: 15px;
   font-weight: 600;
-  color: white;
+  color: var(--text-color);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -749,13 +759,13 @@ html {
 }
 
 .focusModeToggle.active {
-  background: rgba(160, 108, 213, 0.2);
+  background: rgba(127, 200, 169, 0.2);
   border-color: var(--accent-color);
 }
 
 .focusModeToggle.active .focusIcon {
   background: var(--accent-color);
-  color: white;
+  color: var(--text-color);
 }
 
 /* State when Focus Mode is Active */
@@ -798,7 +808,7 @@ body.focusModeActive #customizeBtn {
   align-items: center;
   justify-content: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -840,8 +850,8 @@ body.focusModeActive #customizeBtn {
 .faceScannerCard {
   text-align: center;
   align-items: center;
-  background: rgba(20, 20, 25, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
   padding: 20px;
 }
 
@@ -849,7 +859,7 @@ body.focusModeActive #customizeBtn {
   margin: 0 0 15px 0;
   font-weight: 600;
   font-size: 16px;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .errorBannerSmall {
@@ -871,12 +881,12 @@ body.focusModeActive #customizeBtn {
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .faceScanStatus {
   font-size: 11px;
-  color: #aaa;
+  color: var(--muted-text);
   margin-bottom: 10px;
   display: flex;
   align-items: center;
@@ -885,11 +895,11 @@ body.focusModeActive #customizeBtn {
 }
 
 .analyzingLoader {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   padding: 8px 20px;
   border-radius: 20px;
   font-size: 12px;
-  color: #ddd;
+  color: var(--text-color);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -927,7 +937,7 @@ body.focusModeActive #customizeBtn {
   display: flex;
   gap: 12px;
   padding: 4px 20px;
-  background: rgba(18, 12, 24, 0.85);
+  background: var(--bg-color);
   /* Slightly darker, matching image */
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -951,7 +961,7 @@ body.focusModeActive #customizeBtn {
 }
 
 .bookmarkItem:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
 }
 
 .navigationBar {
@@ -959,7 +969,7 @@ body.focusModeActive #customizeBtn {
   align-items: center;
   gap: 12px;
   padding: 6px 20px;
-  background: rgba(10, 5, 15, 0.95);
+  background: var(--bg-color);
   /* Deeper dark for the bottom-most bar */
   backdrop-filter: blur(25px);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -975,7 +985,7 @@ body.focusModeActive #customizeBtn {
 .extraTools button {
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-color);
   font-size: 18px;
   cursor: pointer;
   width: 30px;
@@ -993,7 +1003,7 @@ body.focusModeActive #customizeBtn {
 
 .navControls button:hover,
 .extraTools button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
 }
 
 .urlInputWrapper {
@@ -1004,14 +1014,14 @@ body.focusModeActive #customizeBtn {
   align-items: center;
   padding: 0 12px;
   height: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 #urlBar {
   flex: 1;
   background: transparent;
   border: none;
-  color: #ccc;
+  color: var(--muted-text);
   font-size: 13px;
   outline: none;
 }
@@ -1038,12 +1048,12 @@ body.focusModeActive #customizeBtn {
   /* Use max-height so it doesn't overflow screen */
   height: 65vh;
   /* Dynamic height */
-  background: rgba(30, 20, 40, 0.85);
+  background: var(--bg-color);
   backdrop-filter: blur(30px) saturate(150%);
   -webkit-backdrop-filter: blur(30px) saturate(150%);
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid #ffffff26;
+  box-shadow: 0 20px 60px #00000099;
   display: flex;
   flex-direction: column;
   /* Critical for flex layout */
@@ -1065,7 +1075,7 @@ body.focusModeActive #customizeBtn {
 }
 
 .chatHeader {
-  background: linear-gradient(90deg, rgba(160, 108, 213, 0.2), rgba(98, 71, 170, 0.2));
+  background: linear-gradient(90deg, rgba(127, 200, 169, 0.2), #6247aa33);
   padding: 15px 20px;
   display: flex;
   justify-content: space-between;
@@ -1122,8 +1132,8 @@ body.focusModeActive #customizeBtn {
 }
 
 .userMessage .messageText {
-  background: linear-gradient(135deg, #a06cd5 0%, #6247aa 100%);
-  color: white;
+  background: linear-gradient(135deg, #7fc8a9 0%, #6247aa 100%);
+  color: var(--text-color);
 }
 
 /* Align user messages to right */
@@ -1151,16 +1161,16 @@ body.focusModeActive #customizeBtn {
 #chatInput {
   flex: 1;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 8px 18px;
-  color: white;
+  color: var(--text-color);
   font-size: 13px;
   outline: none;
 }
 
 #sendChatBtn {
-  background: #a06cd5;
+  background: #7fc8a9;
   border: none;
   border-radius: 50%;
   width: 32px;
@@ -1169,7 +1179,7 @@ body.focusModeActive #customizeBtn {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: white;
+  color: var(--text-color);
 }
 
 .chatHeaderTitle {
@@ -1189,7 +1199,7 @@ body.focusModeActive #customizeBtn {
 .closePanelBtn {
   background: rgba(255, 255, 255, 0.05);
   border: none;
-  color: white;
+  color: var(--text-color);
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -1214,9 +1224,9 @@ body.focusModeActive #customizeBtn {
   /* Floating above the slim taskbar */
   width: 45px;
   height: 45px;
-  background: rgba(30, 20, 40, 0.9);
+  background: var(--bg-color);
   backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -1230,8 +1240,8 @@ body.focusModeActive #customizeBtn {
 
 #aiChatBtn:hover {
   transform: scale(1.1) translateY(-2px);
-  background: rgba(160, 108, 213, 0.3);
-  border-color: rgba(160, 108, 213, 0.5);
+  background: rgba(127, 200, 169, 0.3);
+  border-color: rgba(127, 200, 169, 0.5);
 }
 
 /* AI Chat Button Pulse & Online Indicator */
@@ -1242,9 +1252,9 @@ body.focusModeActive #customizeBtn {
   right: 4px;
   width: 8px;
   height: 8px;
-  background: #4CAF50;
+  background: var(--accent-color);
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+  box-shadow: 0 0 10px var(--accent-color);
   border: 1.5px solid #1e1428;
   animation: pulseGreen 2s infinite;
 }
@@ -1271,14 +1281,14 @@ body.focusModeActive #customizeBtn {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 480px;
-  background: rgba(30, 20, 40, 0.85);
+  background: var(--bg-color);
   backdrop-filter: blur(40px) saturate(160%);
   -webkit-backdrop-filter: blur(40px) saturate(160%);
   border-radius: 24px;
   padding: 30px;
   z-index: 3000;
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
   animation: modalScaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1349,7 +1359,7 @@ body.focusModeActive #customizeBtn {
 }
 
 .uploadOption:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -1381,8 +1391,8 @@ body.focusModeActive #customizeBtn {
 }
 
 .bottomReminderCard {
-  background: rgba(30, 30, 40, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 12px 20px;
   display: flex;
@@ -1406,7 +1416,7 @@ body.focusModeActive #customizeBtn {
 }
 
 .bottomReminderCard strong {
-  color: #fff;
+  color: var(--text-color);
   font-size: 14px;
   margin-bottom: 2px;
 }
@@ -1467,7 +1477,7 @@ body.focusModeActive #customizeBtn {
 }
 
 .modalContent {
-  background: rgba(30, 20, 40, 0.98);
+  background: var(--bg-color);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   width: 360px;
@@ -1560,8 +1570,8 @@ body.focusModeActive #customizeBtn {
 
 /* ADD SHORTCUT BUTTON SPECIFIC */
 .addShortcutBtn .iconContainer {
-  background: white !important;
-  color: #333;
+  background: var(--text-color) !important;
+  color: var(--bg-color);
 }
 
 .addShortcutBtn .iconContainer span {
@@ -1647,4 +1657,12 @@ body.focusModeActive #customizeBtn {
 .appCircle img {
   width: 22px;
   height: 22px;
+}
+
+/* Added for Menu Shortcut Images */
+.menuIconImg {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
 }

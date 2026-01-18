@@ -43,22 +43,23 @@ const ALLOWED_EDUCATIONAL_DOMAINS = [
 ];
 
 // ------------------- Menu Shortcuts -------------------
+// ------------------- Menu Shortcuts -------------------
 const normalModeMenuShortcuts = [
-    { name: 'Discord', url: 'https://discord.com', icon: '💬' },
-    { name: 'Reddit', url: 'https://reddit.com', icon: '🔴' },
-    { name: 'Twitch', url: 'https://twitch.tv', icon: '🎮' },
-    { name: 'GitHub', url: 'https://github.com', icon: '🐙' },
-    { name: 'YouTube', url: 'https://youtube.com', icon: '▶️' },
-    { name: 'Instagram', url: 'https://instagram.com', icon: '📷' }
+    { name: 'Discord', url: 'https://discord.com', icon: 'https://www.google.com/s2/favicons?domain=discord.com&sz=64' },
+    { name: 'Reddit', url: 'https://reddit.com', icon: 'https://www.google.com/s2/favicons?domain=reddit.com&sz=64' },
+    { name: 'Twitch', url: 'https://twitch.tv', icon: 'https://www.google.com/s2/favicons?domain=twitch.tv&sz=64' },
+    { name: 'GitHub', url: 'https://github.com', icon: 'https://www.google.com/s2/favicons?domain=github.com&sz=64' },
+    { name: 'YouTube', url: 'https://youtube.com', icon: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64' },
+    { name: 'Instagram', url: 'https://instagram.com', icon: 'https://www.google.com/s2/favicons?domain=instagram.com&sz=64' }
 ];
 
 const focusModeMenuShortcuts = [
-    { name: 'Sheets', url: 'https://sheets.google.com', icon: '📊' },
-    { name: 'Colab', url: 'https://colab.research.google.com', icon: '🔬' },
-    { name: 'Docs', url: 'https://docs.google.com', icon: '📝' },
-    { name: 'Meet', url: 'https://meet.google.com', icon: '📹' },
-    { name: 'Slides', url: 'https://slides.google.com', icon: '📽️' },
-    { name: 'Drive', url: 'https://drive.google.com', icon: '💾' }
+    { name: 'Sheets', url: 'https://sheets.google.com', icon: 'https://www.google.com/s2/favicons?domain=sheets.google.com&sz=64' },
+    { name: 'Colab', url: 'https://colab.research.google.com', icon: 'https://www.google.com/s2/favicons?domain=colab.research.google.com&sz=64' },
+    { name: 'Docs', url: 'https://docs.google.com', icon: 'https://www.google.com/s2/favicons?domain=docs.google.com&sz=64' },
+    { name: 'Meet', url: 'https://meet.google.com', icon: 'https://www.google.com/s2/favicons?domain=meet.google.com&sz=64' },
+    { name: 'Slides', url: 'https://slides.google.com', icon: 'https://www.google.com/s2/favicons?domain=slides.google.com&sz=64' },
+    { name: 'Drive', url: 'https://drive.google.com', icon: 'https://www.google.com/s2/favicons?domain=drive.google.com&sz=64' }
 ];
 
 function isUrlDistraction(url) {
@@ -424,7 +425,40 @@ ipcRenderer.on('screenshot-done', (event, response) => {
 });
 document.getElementById("downloadBtn").onclick = () => alert("Downloads clicked");
 document.getElementById("layersBtn").onclick = () => alert("Extensions clicked");
-document.getElementById("menuBtn").onclick = () => alert("Menu clicked");
+// Menu Panel Logic
+const menuBtn = document.getElementById("menuBtn");
+const menuPanel = document.getElementById("menuPanel");
+const closeMenuBtn = document.getElementById("closeMenuBtn");
+const menuShortcutsGrid = document.getElementById("menuShortcutsGrid");
+
+// Toggle Menu
+menuBtn.onclick = () => {
+    menuPanel.classList.toggle("hidden");
+    if (!menuPanel.classList.contains("hidden")) {
+        renderMenuShortcuts();
+    }
+};
+
+// Close Menu
+if (closeMenuBtn) {
+    closeMenuBtn.onclick = () => {
+        menuPanel.classList.add("hidden");
+    };
+}
+
+// Close when clicking outside content
+menuPanel.onclick = (e) => {
+    if (e.target === menuPanel) {
+        menuPanel.classList.add("hidden");
+    }
+};
+
+// Close when pressing Escape
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !menuPanel.classList.contains("hidden")) {
+        menuPanel.classList.add("hidden");
+    }
+});
 
 // Health Care - Neck Exercise
 const neckStartBtn = document.getElementById("neckStartBtn");
@@ -761,16 +795,16 @@ async function processFrame() {
                 } else if (data.state === "Headache") {
                     faceScanStatus.style.color = "#ffbb33"; // Orange warning for tension
                 } else if (data.state === "Head Shaking") {
-                    faceScanStatus.style.color = "#33b5e5"; // Light blue for movement
+                    faceScanStatus.style.color = "#7fc8a9"; // Light blue for movement
                 } else if (data.state === "Stressed") {
                     faceScanStatus.style.color = "#ffbb33"; // Orange warning
                 } else {
-                    faceScanStatus.style.color = "#00C851"; // Green good
+                    faceScanStatus.style.color = "#7fc8a9"; // Green good
                 }
             }
 
             if (authStatus) {
-                authStatus.innerHTML = `<span class="statusDot on" style="background:${data.state === 'Focused' ? '#00C851' : '#ff4444'}"></span> ${data.state}`;
+                authStatus.innerHTML = `<span class="statusDot on" style="background:${data.state === 'Focused' ? '#7fc8a9' : '#ff4444'}"></span> ${data.state}`;
             }
 
             // --- PHONE DETECTION LOGIC ---
@@ -1051,9 +1085,7 @@ if (healthCareBtn && healthCareModal && closeHealthBtn) {
 }
 
 // ------------------- MENU PANEL SYSTEM -------------------
-const menuBtn = document.getElementById("menuBtn");
-const menuPanel = document.getElementById("menuPanel");
-const menuShortcutsGrid = document.getElementById("menuShortcutsGrid");
+// (Variables declared earlier)
 
 function renderMenuShortcuts() {
     if (!menuShortcutsGrid) return;
@@ -1067,8 +1099,14 @@ function renderMenuShortcuts() {
         const shortcutEl = document.createElement("div");
         shortcutEl.className = "menuShortcut";
 
+        // Check if icon is an URL (simple check)
+        const isUrl = shortcut.icon.startsWith('http') || shortcut.icon.startsWith('data:');
+        const iconContent = isUrl
+            ? `<img src="${shortcut.icon}" alt="${shortcut.name}" class="menuIconImg">`
+            : shortcut.icon;
+
         shortcutEl.innerHTML = `
-            <div class="menuShortcutIcon">${shortcut.icon}</div>
+            <div class="menuShortcutIcon">${iconContent}</div>
             <div class="menuShortcutLabel">${shortcut.name}</div>
         `;
 
@@ -1081,25 +1119,4 @@ function renderMenuShortcuts() {
     });
 }
 
-if (menuBtn && menuPanel) {
-    menuBtn.onclick = () => {
-        menuPanel.classList.toggle("hidden");
-        if (!menuPanel.classList.contains("hidden")) {
-            renderMenuShortcuts();
-        }
-    };
 
-    // Close when clicking outside
-    menuPanel.onclick = (e) => {
-        if (e.target === menuPanel) {
-            menuPanel.classList.add("hidden");
-        }
-    };
-
-    // Close when pressing Escape
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !menuPanel.classList.contains("hidden")) {
-            menuPanel.classList.add("hidden");
-        }
-    });
-}
