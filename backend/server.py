@@ -420,23 +420,39 @@ def log_history(req: ResolveRequest):
     return {"status": "logged"}
 
 
+# --- OpenAI Setup ---
+from openai import OpenAI
+openai_api_key = os.getenv("OPENAI_API_KEY")
+client = None
+
+if openai_api_key:
+    try:
+        client = OpenAI(api_key=openai_api_key)
+        print("INFO: OpenAI Client Initialized Successfully")
+    except Exception as e:
+        print(f"ERROR: OpenAI Initialization Failed: {e}")
+else:
+    print("WARNING: OPENAI_API_KEY not found in .env")
+
+
 @app.post("/api/chat")
 def chat_with_ai(req: ResolveRequest):
     """
-    AI Chatbot endpoint - provides intelligent responses to user queries using Google Gemini
+    AI Chatbot endpoint - provides intelligent responses to user queries using OpenAI
     """
     message = req.query.strip().lower()
     
+    global client
+    
+    if not client:
+        # Try re-initializing if it failed or key was added late
+        api_key = os.getenv("OPENAI_API_KEY")
+        if api_key:
+            client = OpenAI(api_key=api_key)
+        else:
+            return {"response": "Error: OPENAI_API_KEY not configured.", "status": "error"}
+
     try:
-        # Initialize Gemini
-        import google.generativeai as genai
-        api_key = os.getenv("GEMINI_API_KEY")
-        
-        if not api_key:
-             return {"response": "Error: GEMINI_API_KEY not found in .env file.", "status": "error"}
-             
-        genai.configure(api_key=api_key)
-        
         # System Prompt
         system_prompt = """You are an AI Wellness Assistant integrated into a browser. 
         Your goal is to help users with:
@@ -447,18 +463,21 @@ def chat_with_ai(req: ResolveRequest):
         
         Be concise, friendly, and motivating. Use best practices for health advice."""
         
-        # Initialize Model
-        # gemini-1.5-pro provides higher quality reasoning
-        model = genai.GenerativeModel('gemini-2.5-pro', system_instruction=system_prompt)
-        
         # Generate Response
-        response_obj = model.generate_content(message)
-        response = response_obj.text
+        completion = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": message}
+            ]
+        )
         
-        print(f"DEBUG: Gemini Response: {response}")
+        response = completion.choices[0].message.content
+        
+        print(f"DEBUG: OpenAI Response: {response}")
         
     except Exception as e:
-        print(f"DEBUG: Gemini Error: {e}")
+        print(f"DEBUG: OpenAI Error: {e}")
         response = f"Error: {str(e)}"
     
     print(f"DEBUG: Returning: {response}")
