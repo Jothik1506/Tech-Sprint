@@ -906,6 +906,13 @@ body.focusModeActive #customizeBtn {
   outline: none;
 }
 
+
+.tool-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
 .extraTools {
   display: flex;
   gap: 5px;

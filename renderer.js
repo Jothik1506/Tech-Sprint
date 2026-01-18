@@ -315,15 +315,30 @@ webview.addEventListener('did-start-loading', () => {
     }
     logStatus("Loading...");
 });
+
 webview.addEventListener('did-stop-loading', () => {
     logStatus("Ready");
-    urlBar.value = webview.getURL();
+    const url = webview.getURL();
+    // Don't show about:blank in the URL bar
+    if (url === 'about:blank') {
+        urlBar.value = "";
+    } else {
+        urlBar.value = url;
+    }
 });
 webview.addEventListener('did-navigate', (event) => {
-    urlBar.value = event.url;
+    if (event.url === 'about:blank') {
+        urlBar.value = "";
+    } else {
+        urlBar.value = event.url;
+    }
 });
 webview.addEventListener('did-navigate-in-page', (event) => {
-    urlBar.value = event.url;
+    if (event.url === 'about:blank') {
+        urlBar.value = "";
+    } else {
+        urlBar.value = event.url;
+    }
 });
 
 function showHome() {
