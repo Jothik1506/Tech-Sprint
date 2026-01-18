@@ -449,7 +449,7 @@ def chat_with_ai(req: ResolveRequest):
         
         # Initialize Model
         # gemini-1.5-pro provides higher quality reasoning
-        model = genai.GenerativeModel('gemini-1.5-pro', system_instruction=system_prompt)
+        model = genai.GenerativeModel('gemini-2.5-pro', system_instruction=system_prompt)
         
         # Generate Response
         response_obj = model.generate_content(message)
