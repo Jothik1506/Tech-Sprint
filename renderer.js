@@ -128,30 +128,22 @@ function renderShortcuts() {
         allShortcuts = [...defaultShortcuts, ...customShortcuts];
     }
 
-    allShortcuts.forEach(app => {
-        const appBtn = document.createElement("div");
-        appBtn.className = "appCircle";
-        appBtn.title = app.name;
+    // Separate rendering for custom vs default to add remove logic only to custom
 
-        const iconContainer = document.createElement("div");
-        iconContainer.className = "iconContainer";
-
-        const icon = document.createElement("img");
-        // Use Google's favicon service for a reliable icon
-        icon.src = `https://www.google.com/s2/favicons?domain=${app.url}&sz=64`;
-        icon.onerror = () => { icon.src = app.icon; }; // Fallback
-
-        iconContainer.appendChild(icon);
-        appBtn.appendChild(iconContainer);
-
-        const label = document.createElement("div");
-        label.className = "shortcutLabel";
-        label.innerText = app.name;
-        appBtn.appendChild(label);
-
-        appBtn.onclick = () => navigate(app.url);
+    // Render defaults (no remove button)
+    const shortcutsToRender = isFocusModeActive ? educationalShortcuts : defaultShortcuts;
+    shortcutsToRender.forEach(app => {
+        const appBtn = createShortcutElement(app, false);
         quickAppsContainer.appendChild(appBtn);
     });
+
+    // Render custom shortcuts (with remove button)
+    if (!isFocusModeActive) {
+        customShortcuts.forEach((app, index) => {
+            const appBtn = createShortcutElement(app, true, index);
+            quickAppsContainer.appendChild(appBtn);
+        });
+    }
 
     // Add "Add Shortcut" button ONLY if NOT in Focus Mode
     if (!isFocusModeActive) {
@@ -176,6 +168,52 @@ function renderShortcuts() {
             showShortcutModal();
         };
         quickAppsContainer.appendChild(addBtn);
+    }
+}
+
+
+function createShortcutElement(app, isCustom, index) {
+    const appBtn = document.createElement("div");
+    appBtn.className = "appCircle";
+    appBtn.title = app.name;
+
+    const iconContainer = document.createElement("div");
+    iconContainer.className = "iconContainer";
+
+    const icon = document.createElement("img");
+    icon.src = `https://www.google.com/s2/favicons?domain=${app.url}&sz=64`;
+    icon.onerror = () => { if (app.icon) icon.src = app.icon; };
+
+    iconContainer.appendChild(icon);
+    appBtn.appendChild(iconContainer);
+
+    const label = document.createElement("div");
+    label.className = "shortcutLabel";
+    label.innerText = app.name;
+    appBtn.appendChild(label);
+
+    appBtn.onclick = () => navigate(app.url);
+
+    if (isCustom) {
+        const removeBtn = document.createElement("div");
+        removeBtn.className = "remoteShortcutBtn";
+        removeBtn.innerHTML = "✕";
+        removeBtn.title = "Remove shortcut";
+        removeBtn.onclick = (e) => {
+            e.stopPropagation(); // Prevent navigation
+            removeShortcut(index);
+        };
+        appBtn.appendChild(removeBtn);
+    }
+
+    return appBtn;
+}
+
+function removeShortcut(index) {
+    if (confirm("Are you sure you want to remove this shortcut?")) {
+        customShortcuts.splice(index, 1);
+        localStorage.setItem("customShortcuts", JSON.stringify(customShortcuts));
+        renderShortcuts();
     }
 }
 

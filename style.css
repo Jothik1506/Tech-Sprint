@@ -1341,7 +1341,8 @@ body.focusModeActive #customizeBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Higher than everything else */
+  z-index: 6000;
+  /* Ensure it's on top of everything */
 }
 
 .modal.hidden {
@@ -1495,6 +1496,35 @@ body.focusModeActive #customizeBtn {
 .appCircle:hover .iconContainer {
   background: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
+}
+
+.remoteShortcutBtn {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10;
+}
+
+.appCircle:hover .remoteShortcutBtn {
+  opacity: 1;
+}
+
+.remoteShortcutBtn:hover {
+  transform: scale(1.2);
+  background: #ff0000;
 }
 
 .appCircle img {
