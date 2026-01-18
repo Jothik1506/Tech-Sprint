@@ -423,19 +423,19 @@ def log_history(req: ResolveRequest):
 @app.post("/api/chat")
 def chat_with_ai(req: ResolveRequest):
     """
-    AI Chatbot endpoint - provides intelligent responses to user queries
+    AI Chatbot endpoint - provides intelligent responses to user queries using Google Gemini
     """
     message = req.query.strip().lower()
     
     try:
-        # Initialize OpenAI
-        from openai import OpenAI
-        api_key = os.getenv("OPENAI_API_KEY")
+        # Initialize Gemini
+        import google.generativeai as genai
+        api_key = os.getenv("GEMINI_API_KEY")
         
         if not api_key:
-             return {"response": "Error: OPENAI_API_KEY not found in .env file.", "status": "error"}
+             return {"response": "Error: GEMINI_API_KEY not found in .env file.", "status": "error"}
              
-        client = OpenAI(api_key=api_key)
+        genai.configure(api_key=api_key)
         
         # System Prompt
         system_prompt = """You are an AI Wellness Assistant integrated into a browser. 
@@ -447,19 +447,18 @@ def chat_with_ai(req: ResolveRequest):
         
         Be concise, friendly, and motivating. Use best practices for health advice."""
         
-        completion = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": message}
-            ]
-        )
+        # Initialize Model
+        # gemini-1.5-pro provides higher quality reasoning
+        model = genai.GenerativeModel('gemini-1.5-pro', system_instruction=system_prompt)
         
-        response = completion.choices[0].message.content
-        print(f"DEBUG: OpenAI Response: {response}")
+        # Generate Response
+        response_obj = model.generate_content(message)
+        response = response_obj.text
+        
+        print(f"DEBUG: Gemini Response: {response}")
         
     except Exception as e:
-        print(f"DEBUG: OpenAI Error: {e}")
+        print(f"DEBUG: Gemini Error: {e}")
         response = f"Error: {str(e)}"
     
     print(f"DEBUG: Returning: {response}")
