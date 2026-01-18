@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meditation - Relax & Focus</title>
+    <link rel="stylesheet" href="meditation.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Top Bar -->
+    <div class="topBar">
+        <button id="backBtn" class="iconBtn">←</button>
+        <div class="headerText">
+            <h1>Meditation</h1>
+            <p>Relax & Focus</p>
+        </div>
+        <div style="width: 24px;"></div> <!-- Spacer -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="mainContent">
+        <div class="meditationCircle">
+            <div class="instructionText" id="instructionText">Loading...</div>
+            <div class="timerDisplay" id="timerDisplay">60s</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="progressDots">
+                <div class="dot active" id="dot1"></div>
+                <div class="dot" id="dot2"></div>
+                <div class="dot" id="dot3"></div>
+            </div>
+            <div class="gameBtnGroup">
+                <button id="pauseBtn" class="pillBtn">Pause</button>
+                <button id="skipBtn" class="pillBtn secondary">Skip</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="meditation.js"></script>
+</body>
+
+</html>

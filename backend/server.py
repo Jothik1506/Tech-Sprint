@@ -13,6 +13,7 @@ import os
 from dotenv import load_dotenv
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from comtypes import CLSCTX_ALL
+import time
 
 # Load .env from parent directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -69,6 +70,8 @@ object_model = YOLO('yolov8n.pt') # Load object detection model
 # Global State
 squat_count = 0
 current_stage = None
+landmark_history = []  # To track head movement
+MAX_HISTORY = 5      # Reduced for 1s polling
 
 # Using MediaPipe Tasks API for face detection and mesh
 from mediapipe.tasks import python
@@ -252,6 +255,23 @@ def analyze_face(req: ImageRequest = Body(...)):
         if len(results.face_landmarks) > 0:
             landmarks = results.face_landmarks[0]
             
+            # --- Head Movement Tracking ---
+            # Use nose tip (landmark 1) for movement tracking
+            nose_tip = landmarks[1]
+            landmark_history.append({'x': nose_tip.x, 'y': nose_tip.y, 'time': time.time()})
+            if len(landmark_history) > MAX_HISTORY:
+                landmark_history.pop(0)
+
+            # Detect Head Shaking (Horizontal movement)
+            head_shaking = False
+            if len(landmark_history) >= 3:
+                # Calculate horizontal variance
+                x_coords = [p['x'] for p in landmark_history]
+                x_range = max(x_coords) - min(x_coords)
+                # If movement is mostly horizontal and significant
+                if x_range > 0.08: # Increased threshold for less sensitivity
+                     head_shaking = True
+
             # EAR
             ear_right = calculate_ear(landmarks, RIGHT_EYE)
             ear_left = calculate_ear(landmarks, LEFT_EYE)
@@ -279,16 +299,18 @@ def analyze_face(req: ImageRequest = Body(...)):
             EAR_THRESHOLD = 0.22 # Below this = Drowsy
             MAR_THRESHOLD = 0.6  # Above this = Yawning
             
+            # Debug logs for tuning
+            # print(f"DEBUG: EAR:{avg_ear:.3f} MAR:{mar:.3f} BROW:{norm_brow_dist:.3f} SHAKE:{x_range if len(landmark_history) >= 8 else 0:.3f}")
+            
             if mar > MAR_THRESHOLD:
                 state = "Yawning"
                 details = "Fatigue detected (Yawning)"
             elif avg_ear < EAR_THRESHOLD:
                 state = "Drowsy"
                 details = "Fatigue detected (Drowsy)"
-            elif norm_brow_dist < 0.23: # Experimental low brow distance
-                 # state = "Stressed" 
-                 # details = "Signs of tension detected"
-                 pass
+            elif head_shaking or norm_brow_dist < 0.21:
+                state = "Headache"
+                details = "Head pain or tension detected"
             else:
                 state = "Focused"
                 details = "User appears alert"
@@ -305,6 +327,7 @@ def analyze_face(req: ImageRequest = Body(...)):
                 }
             }
                 
+        landmark_history.clear() # Clear history when no face is found
         return {"detected": False, "state": "No Face", "details": "No face detected"}
         
     except Exception as e:

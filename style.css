@@ -915,12 +915,13 @@ body.focusModeActive #customizeBtn {
 .aiChatPanel {
   position: fixed;
   left: 25px;
-  /* Align with new button position */
   bottom: 85px;
   width: 380px;
-  height: 550px;
+  max-height: 600px;
+  /* Use max-height so it doesn't overflow screen */
+  height: 65vh;
+  /* Dynamic height */
   background: rgba(30, 20, 40, 0.85);
-  /* Deep premium tint */
   backdrop-filter: blur(30px) saturate(150%);
   -webkit-backdrop-filter: blur(30px) saturate(150%);
   border-radius: 20px;
@@ -928,6 +929,7 @@ body.focusModeActive #customizeBtn {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
+  /* Critical for flex layout */
   z-index: 2000;
   animation: slidePanelUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
@@ -952,17 +954,41 @@ body.focusModeActive #customizeBtn {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex: 0 0 auto;
+  /* Fixed header */
 }
 
 .chatMessages {
   padding: 20px;
   background: rgba(0, 0, 0, 0.1);
+  flex: 1 1 auto;
+  /* Expands to fill space */
+  overflow-y: auto;
+  /* SCROLLABLE */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Custom Scrollbar for Chat */
+.chatMessages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.chatMessages::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .messageContent {
   display: flex;
   gap: 12px;
   margin-bottom: 5px;
+  flex-shrink: 0;
 }
 
 .messageText {
@@ -970,9 +996,12 @@ body.focusModeActive #customizeBtn {
   padding: 10px 15px;
   border-radius: 12px;
   font-size: 13.5px;
-  max-width: 85%;
+  max-width: 80%;
+  /* Prevent bubble from being too wide */
   line-height: 1.5;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .userMessage .messageText {
@@ -980,11 +1009,26 @@ body.focusModeActive #customizeBtn {
   color: white;
 }
 
+/* Align user messages to right */
+.userMessage {
+  align-self: flex-end;
+  /* If wrapper is column */
+  display: flex;
+  justify-content: flex-end;
+}
+
+.userMessage .messageContent {
+  flex-direction: row-reverse;
+}
+
 .chatInputArea {
   padding: 15px 20px;
   display: flex;
   gap: 12px;
   background: rgba(0, 0, 0, 0.2);
+  flex: 0 0 auto;
+  /* Fixed footer */
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 #chatInput {

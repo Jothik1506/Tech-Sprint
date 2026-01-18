@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neck Exercise - Pain Relief</title>
+    <link rel="stylesheet" href="neck.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- MediaPipe Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- Top Bar -->
+    <div class="topBar">
+        <button id="backBtn" class="iconBtn">←</button>
+        <div class="headerText">
+            <h1>Neck Exercise</h1>
+            <p>Pain Relief</p>
+        </div>
+        <div style="width: 24px;"></div> <!-- Spacer to balance header -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="mainContent">
+        <div class="avatarCircle">
+            <div class="instructionText" id="instructionText">Loading...</div>
+            <div class="timerDisplay" id="timerDisplay">--</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="progressDots">
+                <div class="dot active" id="dot1"></div>
+                <div class="dot" id="dot2"></div>
+                <div class="dot" id="dot3"></div>
+            </div>
+            <div class="gameBtnGroup">
+                <button id="pauseBtn" class="pillBtn">Pause</button>
+                <button id="skipBtn" class="pillBtn secondary">Skip Step</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Bubble (Top Right) -->
+    <div class="cameraBubble">
+        <video id="inputVideo" class="inputVideo" playsinline></video>
+        <canvas id="outputCanvas" class="outputCanvas"></canvas>
+    </div>
+
+    <script src="neck.js"></script>
+</body>
+
+</html>

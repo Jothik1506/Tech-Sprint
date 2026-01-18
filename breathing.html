@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Exercises</title>
+    <link rel="stylesheet" href="breathing.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Top Bar -->
+    <div class="topBar">
+        <button id="backBtn" class="iconBtn">←</button>
+        <div class="headerText">
+            <h1>Breathing exercises</h1>
+            <p>3 minutes</p>
+        </div>
+        <div style="width: 24px;"></div> <!-- Spacer -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="mainContent">
+        <div class="breathingOrbContainer">
+            <div class="breathingOrb" id="orb"></div>
+            <div class="phaseText" id="phaseText">Get Ready</div>
+            <div class="phaseTimer" id="phaseTimer"></div>
+        </div>
+
+        <div class="totalTimer" id="totalTimer">03:00</div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="gameBtnGroup">
+                <button id="pauseBtn" class="pillBtn">Pause</button>
+                <button id="skipBtn" class="pillBtn secondary">Skip</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="breathing.js"></script>
+</body>
+
+</html>

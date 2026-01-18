@@ -349,6 +349,30 @@ document.getElementById("downloadBtn").onclick = () => alert("Downloads clicked"
 document.getElementById("layersBtn").onclick = () => alert("Extensions clicked");
 document.getElementById("menuBtn").onclick = () => alert("Menu clicked");
 
+// Health Care - Neck Exercise
+const neckStartBtn = document.getElementById("neckStartBtn");
+if (neckStartBtn) {
+    neckStartBtn.addEventListener("click", () => {
+        window.location.href = "neck.html";
+    });
+}
+
+// Health Care - Meditation
+const meditationStartBtn = document.getElementById("meditationStartBtn");
+if (meditationStartBtn) {
+    meditationStartBtn.addEventListener("click", () => {
+        window.location.href = "meditation.html";
+    });
+}
+
+// Health Care - Breathing
+const breathingStartBtn = document.getElementById("breathingStartBtn");
+if (breathingStartBtn) {
+    breathingStartBtn.addEventListener("click", () => {
+        window.location.href = "breathing.html";
+    });
+}
+
 // Main Search Input
 searchInput.onkeydown = (e) => {
     if (e.key === "Enter") {
@@ -624,7 +648,7 @@ async function startCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         videoEl.srcObject = stream;
-        setInterval(processFrame, 2000);
+        setInterval(processFrame, 1000);
     } catch (err) {
         console.error("Error accessing camera", err);
         authStatus.innerText = "Camera Error";
@@ -657,11 +681,14 @@ async function processFrame() {
                 // Style changes based on state
                 if (data.state === "Yawning" || data.state === "Drowsy") {
                     faceScanStatus.style.color = "#ff4444"; // Red alert
+                } else if (data.state === "Headache") {
+                    faceScanStatus.style.color = "#ffbb33"; // Orange warning for tension
+                } else if (data.state === "Head Shaking") {
+                    faceScanStatus.style.color = "#33b5e5"; // Light blue for movement
                 } else if (data.state === "Stressed") {
                     faceScanStatus.style.color = "#ffbb33"; // Orange warning
                 } else {
                     faceScanStatus.style.color = "#00C851"; // Green good
-                    faceScanStatus.style.color = "";
                 }
             }
 
@@ -671,8 +698,8 @@ async function processFrame() {
 
             // --- PHONE DETECTION LOGIC ---
             if (data.using_phone) {
-                // Increment timer (polling every 2s, so add 2s)
-                phoneUsageSeconds += 2;
+                // Increment timer (polling every 1s, so add 1s)
+                phoneUsageSeconds += 1;
                 console.log("Phone Detected! Duration:", phoneUsageSeconds);
 
                 if (phoneUsageSeconds > 15) {
@@ -704,7 +731,7 @@ async function processFrame() {
             if (phoneWarning) phoneWarning.classList.add("hidden");
 
             // --- ABSENCE DETECTION LOGIC ---
-            absenceSeconds += 2; // increments by 2s (polling interval)
+            absenceSeconds += 1; // increments by 1s (polling interval)
             if (absenceSeconds > 9) {
                 if (absenceWarning) absenceWarning.classList.remove("hidden");
             }
@@ -719,7 +746,7 @@ async function startCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         videoEl.srcObject = stream;
-        setInterval(processFrame, 2000);
+        setInterval(processFrame, 1000);
     } catch (err) {
         console.error("Error accessing camera", err);
         authStatus.innerText = "Camera Error";
