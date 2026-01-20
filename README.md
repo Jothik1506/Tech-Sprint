@@ -16,7 +16,7 @@ A premium, wellness-focused browser with integrated AI assistance, facial recogn
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/Jothik1506/Imagine-Cup
+git clone https://github.com/Jothik1506/Tech-Sprint
 cd wellness-hackathron-
 ```
 
