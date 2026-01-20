@@ -17,7 +17,6 @@ A premium, wellness-focused browser with integrated AI assistance, facial recogn
 
 ```bash
 git clone https://github.com/Jothik1506/Tech-Sprint
-cd wellness-hackathron-
 ```
 
 ### Step 2: Set Up Python Environment
